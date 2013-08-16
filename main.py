@@ -9,6 +9,7 @@ import random, os, sys, pygame
 from pygame.locals import *
 
 from grid import *
+from player_ui import *
 
 # Screen resolution
 SCREEN_X = 800
@@ -86,6 +87,10 @@ def main():
         ####################################################################
         # Display updating
         ####################################################################
+
+        # Display player ui
+        players_ui = UI_Players()
+        players_ui.draw_image()
 
         # Update everything
         pygame.display.flip()
