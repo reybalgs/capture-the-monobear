@@ -17,7 +17,7 @@ class Grid():
         screen = pygame.display.get_surface()
 
         # Horizontal line drawing
-        hor_lines = 24
+        hor_lines = 19
 
         # Initial x pos of the vertical lines
         x_pos = 16
@@ -25,13 +25,8 @@ class Grid():
         y_pos = 12
         while hor_lines > 0:
             # Draw the line
-            if hor_lines == 15:
-                # Middle line, we extend to the end
-                line = pygame.draw.aaline(screen, GRID_COLOR, (x_pos,
-                    y_pos), (792, y_pos))
-            else:
-                line = pygame.draw.aaline(screen, GRID_COLOR, (x_pos,
-                    y_pos), (560, y_pos))
+            line = pygame.draw.aaline(screen, GRID_COLOR, (x_pos,
+                y_pos), (784, y_pos))
             # Increment the vertical position
             y_pos += 32
             # Decrement the number of horizontal lines
@@ -40,7 +35,7 @@ class Grid():
         # Reset the y position
         y_pos = 12
         # Vertical line drawing
-        ver_lines = 18
+        ver_lines = 25
         while ver_lines > 0:
             # Draw the line
             line = pygame.draw.aaline(screen, GRID_COLOR, (x_pos, y_pos),

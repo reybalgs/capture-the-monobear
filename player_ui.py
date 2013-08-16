@@ -17,6 +17,10 @@ class UI_Players():
         kirigiri = pygame.image.load(os.path.join("images", 
             "kirigiri_full.png"))
 
+        # Get per pixel alpha transparency of the images
+        naegi.convert_alpha()
+        kirigiri.convert_alpha()
+
         # Blit the images onto the screen
         screen.blit(naegi, (580,20))
         screen.blit(kirigiri, (550,310))
