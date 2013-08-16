@@ -8,6 +8,8 @@
 import random, os, sys, pygame
 from pygame.locals import *
 
+from grid import *
+
 # Screen resolution
 SCREEN_X = 800
 SCREEN_Y = 600
@@ -62,11 +64,25 @@ def main():
         #print(str(frames) + ' were rendered!')
 
         ####################################################################
+        # Game logic
+        ####################################################################
+
+        grid = Grid()
+        grid.draw_grid()
+
+        ####################################################################
         # Event Handling
         ####################################################################
         for event in pygame.event.get():
             if event.type == QUIT:
                 loop = False
+
+        ####################################################################
+        # Display updating
+        ####################################################################
+
+        # Update everything
+        pygame.display.flip()
 
 if __name__ == '__main__':
     main()
