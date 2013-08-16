@@ -28,6 +28,9 @@ WALL = 3
 TRAP = 4
 MONOKUMA = 5
 
+# Colors
+WHITE = (255,255,255)
+
 # Movement cost
 MOVE_COST = 10
 
@@ -48,6 +51,9 @@ def main():
 
     # Initialize the background of the game
     background = pygame.Surface(screen.get_size())
+
+    # Fill the color of the background
+    screen.fill(WHITE)
 
     # Unnecessary game loop variable
     loop = True

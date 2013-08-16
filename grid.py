@@ -7,7 +7,7 @@ import random, os, sys, pygame
 from pygame.locals import *
 
 # CONSTANTS
-GRID_COLOR = pygame.Color(0, 255, 0, 0)
+GRID_COLOR = pygame.Color(0, 0, 0, 0)
 
 class Grid():
     def draw_grid(self):
@@ -51,4 +51,4 @@ class Grid():
             ver_lines -= 1
 
         # DEBUG MESSAGE
-        print('Grid drawn!')
+        #print('Grid drawn!')
