@@ -83,7 +83,10 @@ def main():
     kirigiri.coordinates = (9,15)
     kirigiri.direction = 'up'
     grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
-
+    # Testing traps
+    grid.set_node_entity((10,3), TRAP)
+    grid.set_node_entity((8,7), TRAP)
+    # Testing walls
     for i in range(3, 15):
         grid.set_node_entity((6, i), WALL)
     for i in range(2, 20):
@@ -123,6 +126,7 @@ def main():
         grid.draw_grid()
         grid.draw_monokuma()
         grid.draw_walls()
+        grid.draw_traps()
         grid.draw_player(naegi)
         grid.draw_player(kirigiri)
 

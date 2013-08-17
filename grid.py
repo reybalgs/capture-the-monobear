@@ -167,6 +167,25 @@ class Grid():
         else:
             triangle = pygame.draw.polygon(screen, KIRIGIRI_COLOR, points)
 
+    def draw_traps(self):
+        """
+        Draws the traps around the board.
+        """
+        screen = pygame.display.get_surface()
+        # Find the nodes containing the bombs
+        nodes = self.find_nodes_containing(TRAP)
+
+        # Initialize the image for the traps
+        trap = pygame.transform.scale(pygame.image.load(os.path.join("images",
+            "bomb.png")), (SQUARE_SIZE, SQUARE_SIZE))
+
+        # Now let's draw the traps in those nodes
+        for node in nodes:
+            # Get the x and y coordinates to draw the traps in
+            drawing_loc = self.get_drawing_coordinates(node.coordinates)
+            # Blit the trap in that location
+            screen.blit(trap, drawing_loc)
+
     def draw_monokuma(self):
         """
         Draws monokuma's sprite depending on his location in the board.
