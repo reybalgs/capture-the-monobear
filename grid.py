@@ -6,8 +6,13 @@
 import random, os, sys, pygame
 from pygame.locals import *
 
+# Import node class
+from node import Node
+
 # CONSTANTS
 GRID_COLOR = pygame.Color(0, 0, 0, 0)
+ARRAY_SIZE_X = 24
+ARRAY_SIZE_Y = 18
 
 class Grid():
     def draw_grid(self):
@@ -65,3 +70,33 @@ class Grid():
 
         # DEBUG MESSAGE
         #print('Grid drawn!')
+
+    def __init__(self):
+        """
+        Initialization function for the grid.
+
+        Initializes the important variables that it has as an object such as
+        the array of nodes.
+        """
+        # Initialize the "array" we will use for the grid
+        # Note that it's just a y list of x lists
+        self.node_array = []
+
+        # Debug variable for tracking nodes
+        num = 1
+        for i in range(0, ARRAY_SIZE_Y):
+            row = []
+            for j in range(0, ARRAY_SIZE_X):
+                # Create the node with its respective coordinates
+                node = Node(j, i)
+                # Add the node to the row
+                row.append(node)
+                # DEBUG message
+                print('Created node ' + str(num) + ' at coordinates: ' + 
+                        str(node.coordinates))
+                num += 1
+            # Add the row to the array
+            self.node_array.append(row)
+
+        # Debug message
+        print('Node array initialized!')

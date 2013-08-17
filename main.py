@@ -68,6 +68,12 @@ def main():
     naegi_score = 0
     kirigiri_score = 0
 
+    # Initialize the game grid
+    grid = Grid()
+
+    # Initialize the handler of player UI elements
+    players_ui = UI_Players()
+
     while loop:
         # Limit the frame rate of the game to 30FPS
         clock.tick(30)
@@ -80,7 +86,6 @@ def main():
         # Game logic
         ####################################################################
 
-        grid = Grid()
 
         ####################################################################
         # Event Handling
@@ -100,7 +105,6 @@ def main():
         grid.draw_grid()
 
         # Display player ui
-        players_ui = UI_Players()
         players_ui.draw_image()
         players_ui.draw_text()
         players_ui.draw_score(naegi_score, kirigiri_score)
