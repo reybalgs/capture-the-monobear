@@ -71,6 +71,11 @@ def main():
     # Initialize the game grid
     grid = Grid()
 
+    # DEBUG: Test entity drawing
+    #grid.node_array[8][4].contents = MONOKUMA
+    grid.set_node_entity((4,8), MONOKUMA)
+    #grid.set_node_entity((2,2), MONOKUMA)
+
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
@@ -103,6 +108,7 @@ def main():
 
         # Draw the grid
         grid.draw_grid()
+        grid.draw_monokuma()
 
         # Display player ui
         players_ui.draw_image()

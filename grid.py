@@ -13,8 +13,89 @@ from node import Node
 GRID_COLOR = pygame.Color(0, 0, 0, 0)
 ARRAY_SIZE_X = 24
 ARRAY_SIZE_Y = 18
+SQUARE_SIZE = 32
+INITIAL_POS_X = 16
+INITIAL_POS_Y = 12
+X = 0
+Y = 1
+
+# Entities
+NONE = 0
+NAEGI = 1
+KIRIGIRI = 2
+WALL = 3
+TRAP = 4
+MONOKUMA = 5
 
 class Grid():
+    def find_nodes_containing(self, entity):
+        """
+        Returns a list of Nodes containing the entity provided.
+        """
+        nodes = []
+        for row in self.node_array:
+            for node in row:
+                if node.contents is entity:
+                    # Debug message
+                    print('Entity ' + str(entity) + ' found at ' +
+                            str(node.coordinates))
+                    nodes.append(node)
+
+        return nodes
+
+    def set_node_entity(self, location, entity):
+        """
+        Sets the entity of the node in the location passed as an argument to
+        the entity passed as an argument.
+
+        This convenience function is created because simply doing
+        node_array[x][y] will yield wrong results, because the actual array is
+        represented as node_array[y][x].
+        """
+        node = self.get_node_in_location(location)
+        node.contents = entity
+
+    def get_node_in_location(self, location):
+        """
+        Returns a Node object in the specified (x,y) location tuple.
+        """
+        node = self.node_array[location[Y]][location[X]]
+        # Debug message
+        print('Returning node in ' + str(node.coordinates) + ' with contents ' +
+                str(node.contents))
+        return node
+
+    def get_drawing_coordinates(self, location):
+        """
+        Returns an (x, y) location tuple for PyGame to blit images into,
+        depending on the (x, y) location on the array provided as an argument.
+        """
+        x = INITIAL_POS_X + (32 * location[X])
+        y = INITIAL_POS_Y + (32 * location[Y])
+        return (x, y)
+
+    def draw_monokuma(self):
+        """
+        Draws monokuma's sprite depending on his location in the board.
+        """
+        screen = pygame.display.get_surface()
+        # First, we need to find Monokuma's location in the board.
+        # I know it's not supposed to happen, but sometimes there can be the
+        # case of multiple Monokumas on the board, so we have to use a list of
+        # these locations.
+        nodes = self.find_nodes_containing(MONOKUMA)
+        
+        # Then, let's initialize the image for Monokuma.
+        monokuma = pygame.transform.scale(pygame.image.load(os.path.join(
+            "images", "monokuma_head.png")), (SQUARE_SIZE, SQUARE_SIZE))
+        # Now let's draw Monokuma in these nodes
+        for node in nodes:
+            # We need to get the x and y coordinates (in Surface) to draw
+            # Monokuma in, depending on the location in the array
+            drawing_loc = self.get_drawing_coordinates(node.coordinates)
+            # Blit Monokuma in that location
+            screen.blit(monokuma, drawing_loc)
+
     def draw_grid(self):
         """
         Draw the horizontal and vertical lines which comprises the grid.
@@ -25,9 +106,9 @@ class Grid():
         hor_lines = 19
 
         # Initial x pos of the vertical lines
-        x_pos = 16
+        x_pos = INITIAL_POS_X
         # Initial y pos of the horizontal lines
-        y_pos = 12
+        y_pos = INITIAL_POS_Y
         while hor_lines > 0:
             # Draw the line
             if hor_lines == 19:
@@ -51,7 +132,7 @@ class Grid():
             hor_lines -= 1
 
         # Reset the y position
-        y_pos = 12
+        y_pos = INITIAL_POS_Y
         # Vertical line drawing
         ver_lines = 26
         while ver_lines > 0:
