@@ -11,6 +11,11 @@ from pygame.locals import *
 from grid import *
 from player_ui import *
 
+
+#############################################################################
+# CONSTANTS AND CRAP
+#############################################################################
+
 # Screen resolution
 SCREEN_X = 1024
 SCREEN_Y = 600
@@ -91,6 +96,7 @@ def main():
         # Display player ui
         players_ui = UI_Players()
         players_ui.draw_image()
+        players_ui.draw_text()
 
         # Update everything
         pygame.display.flip()
