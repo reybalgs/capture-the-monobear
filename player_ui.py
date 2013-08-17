@@ -22,5 +22,5 @@ class UI_Players():
         kirigiri.convert_alpha()
 
         # Blit the images onto the screen
-        screen.blit(naegi, (580,20))
-        screen.blit(kirigiri, (550,310))
+        screen.blit(naegi, (800,20))
+        screen.blit(kirigiri, (778,310))

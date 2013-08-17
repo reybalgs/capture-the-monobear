@@ -89,8 +89,8 @@ def main():
         ####################################################################
 
         # Display player ui
-        #players_ui = UI_Players()
-        #players_ui.draw_image()
+        players_ui = UI_Players()
+        players_ui.draw_image()
 
         # Update everything
         pygame.display.flip()
