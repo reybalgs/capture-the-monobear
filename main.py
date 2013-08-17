@@ -12,7 +12,7 @@ from grid import *
 from player_ui import *
 
 # Screen resolution
-SCREEN_X = 800
+SCREEN_X = 1024
 SCREEN_Y = 600
 
 # Game frame rate
