@@ -8,10 +8,26 @@
 # Import future print function (from Python 3)
 from __future__ import print_function
 
+# CONSTANTS
+X = 0
+Y = 1
+
 class Node():
     """
     The class pertaining to the nodes in the game.
     """
+    def getX(self):
+        """
+        Returns the x coordinate of the Node.
+        """
+        return self.coordinates[X]
+
+    def getY(self):
+        """
+        Returns the y coordinate of the Node.
+        """
+        return self.coordinates[Y]
+
     def __init__(self, coord_x = 0, coord_y = 0, contents = 0):
         # The contents of the node.
         self.contents = contents

@@ -93,7 +93,8 @@ class Grid():
                 row.append(node)
                 # DEBUG message
                 print('Created node ' + str(num) + ' at coordinates: ' + 
-                        str(node.coordinates))
+                        str(node.coordinates) + ' or (' + str(node.getX() + 1)
+                        + ', ' + str(node.getY() + 1) + ')')
                 num += 1
             # Add the row to the array
             self.node_array.append(row)
