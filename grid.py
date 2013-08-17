@@ -178,6 +178,7 @@ class Grid():
         # Initialize the image for the traps
         trap = pygame.transform.scale(pygame.image.load(os.path.join("images",
             "bomb.png")), (SQUARE_SIZE, SQUARE_SIZE))
+        trap.convert_alpha()
 
         # Now let's draw the traps in those nodes
         for node in nodes:
@@ -200,6 +201,7 @@ class Grid():
         # Then, let's initialize the image for Monokuma.
         monokuma = pygame.transform.scale(pygame.image.load(os.path.join(
             "images", "monokuma_head.png")), (SQUARE_SIZE, SQUARE_SIZE))
+        monokuma.convert_alpha()
         # Now let's draw Monokuma in these nodes
         for node in nodes:
             # We need to get the x and y coordinates (in Surface) to draw
