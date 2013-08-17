@@ -19,6 +19,10 @@ INITIAL_POS_X = 16
 INITIAL_POS_Y = 12
 X = 0
 Y = 1
+# Color for Naegi's text and icon
+NAEGI_COLOR = (120,150,90)
+# Color for Kirigiri's text and icon
+KIRIGIRI_COLOR = (200,160,200)
 
 # Entities
 NONE = 0
@@ -93,6 +97,75 @@ class Grid():
             drawing_loc = self.get_drawing_coordinates(node.coordinates)
             wall = pygame.draw.rect(screen, WALL_COLOR,
                     pygame.Rect(drawing_loc, (SQUARE_SIZE, SQUARE_SIZE)))
+
+    def draw_player(self, player):
+        """
+        Draws the triangle sprite of the player, depending on the player
+        passed as an argument. The direction the sprite is pointing is also
+        dependent on the direction of the player passed.
+        """
+        screen = pygame.display.get_surface()
+
+        # Get the rect where the triangle is going to be drawn.
+        square_rect = pygame.Rect(self.get_drawing_coordinates(
+                    player.coordinates), (SQUARE_SIZE, SQUARE_SIZE))
+        # Make the rect a little smaller
+        square_rect.x += 4
+        square_rect.y += 4
+        square_rect.w -= 8
+        square_rect.h -= 8
+        # DEBUG message: Print rect
+        #print square_rect
+        # Initialize the list of points for the triangle. The shape will
+        # greatly depend on the location the player is going.
+        # point1 - first non-center point
+        # point2 - second non-center point
+        # point3 - center point
+        if(player.direction is 'right'):
+            # Top left of the rect
+            point1 = square_rect.topleft
+            # Bottom left of the rect
+            point2 = square_rect.bottomleft
+            # Center right of the rect
+            point3 = (square_rect.right, square_rect.bottom -
+                    ((square_rect.bottom - square_rect.top) / 2))
+        elif(player.direction is 'down'):
+            # Top left of the rect
+            point1 = square_rect.topleft
+            # Top right of the rect
+            point2 = square_rect.topright
+            # Bottomcenter of the rect
+            point3 = (square_rect.right - ((square_rect.right -
+                square_rect.left) / 2), square_rect.bottom)
+        elif(player.direction is 'left'):
+            # Top right of the rect
+            point1 = square_rect.topright
+            # Bottom right of the rect
+            point2 = square_rect.bottomright
+            # Center left of the rect
+            point3 = (square_rect.left, square_rect.bottom -
+                    ((square_rect.bottom - square_rect.top) / 2))
+        elif(player.direction is 'up'):
+            # Bottom right of the rect
+            point1 = square_rect.bottomright
+            # Bottom left of the rect
+            point2 = square_rect.bottomleft
+            # Center top of the rect
+            point3 = (square_rect.right - ((square_rect.right -
+                square_rect.left) / 2), square_rect.top)
+        # Add the points into the list.
+        points = [point1, point2, point3]
+        # DEBUG message, print points
+        #print points
+
+        # DEBUG print player name
+        #print player.name.lower()
+
+        # Draw the triangle of the player.
+        if(player.name.lower() == 'naegi'):
+            triangle = pygame.draw.polygon(screen, NAEGI_COLOR, points)
+        else:
+            triangle = pygame.draw.polygon(screen, KIRIGIRI_COLOR, points)
 
     def draw_monokuma(self):
         """

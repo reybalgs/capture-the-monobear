@@ -10,7 +10,7 @@ from pygame.locals import *
 
 from grid import *
 from player_ui import *
-
+from player import *
 
 #############################################################################
 # CONSTANTS AND CRAP
@@ -64,9 +64,9 @@ def main():
     # Tracks total frames rendered
     frames = 0
 
-    # The scores of the players
-    naegi_score = 0
-    kirigiri_score = 0
+    # Initialzie the two players
+    naegi = Player('Naegi')
+    kirigiri = Player('Kirigiri')
 
     # Initialize the game grid
     grid = Grid()
@@ -75,6 +75,14 @@ def main():
     #grid.node_array[8][4].contents = MONOKUMA
     grid.set_node_entity((4,8), MONOKUMA)
     #grid.set_node_entity((2,2), MONOKUMA)
+    # Testing Naegi's location
+    naegi.coordinates = (5,3)
+    naegi.direction = 'down'
+    grid.set_node_entity(naegi.coordinates, NAEGI)
+    # Testing Kirigiri's location
+    kirigiri.coordinates = (9,15)
+    kirigiri.direction = 'up'
+    grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
 
     for i in range(3, 15):
         grid.set_node_entity((6, i), WALL)
@@ -115,11 +123,13 @@ def main():
         grid.draw_grid()
         grid.draw_monokuma()
         grid.draw_walls()
+        grid.draw_player(naegi)
+        grid.draw_player(kirigiri)
 
         # Display player ui
         players_ui.draw_image()
         players_ui.draw_text()
-        players_ui.draw_score(naegi_score, kirigiri_score)
+        players_ui.draw_score(naegi.score, kirigiri.score)
 
         # Update everything
         pygame.display.flip()
