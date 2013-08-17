@@ -11,6 +11,7 @@ from node import Node
 
 # CONSTANTS
 GRID_COLOR = pygame.Color(0, 0, 0, 0)
+WALL_COLOR = pygame.Color(0, 0, 120, 0)
 ARRAY_SIZE_X = 24
 ARRAY_SIZE_Y = 18
 SQUARE_SIZE = 32
@@ -37,8 +38,8 @@ class Grid():
             for node in row:
                 if node.contents is entity:
                     # Debug message
-                    print('Entity ' + str(entity) + ' found at ' +
-                            str(node.coordinates))
+                    #print('Entity ' + str(entity) + ' found at ' +
+                    #        str(node.coordinates))
                     nodes.append(node)
 
         return nodes
@@ -73,6 +74,25 @@ class Grid():
         x = INITIAL_POS_X + (32 * location[X])
         y = INITIAL_POS_Y + (32 * location[Y])
         return (x, y)
+
+    def draw_walls(self):
+        """
+        Draws the wall objects of the board.
+        """
+        screen = pygame.display.get_surface()
+
+        # Find all the nodes containing walls in the game, then put them in a
+        # list.
+        nodes = self.find_nodes_containing(WALL)
+
+        # Now let's draw the rects into the game surface.
+        for node in nodes:
+            # We need to get the X and Y top corner coordinates to draw the
+            # rect into, and those locations will depend on the location of the
+            # nodes in the array.
+            drawing_loc = self.get_drawing_coordinates(node.coordinates)
+            wall = pygame.draw.rect(screen, WALL_COLOR,
+                    pygame.Rect(drawing_loc, (SQUARE_SIZE, SQUARE_SIZE)))
 
     def draw_monokuma(self):
         """

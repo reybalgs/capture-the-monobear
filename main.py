@@ -76,6 +76,11 @@ def main():
     grid.set_node_entity((4,8), MONOKUMA)
     #grid.set_node_entity((2,2), MONOKUMA)
 
+    for i in range(3, 15):
+        grid.set_node_entity((6, i), WALL)
+    for i in range(2, 20):
+        grid.set_node_entity((i, 1), WALL)
+
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
@@ -109,6 +114,7 @@ def main():
         # Draw the grid
         grid.draw_grid()
         grid.draw_monokuma()
+        grid.draw_walls()
 
         # Display player ui
         players_ui.draw_image()
