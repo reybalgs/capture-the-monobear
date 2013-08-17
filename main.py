@@ -58,14 +58,15 @@ def main():
     # Initialize the background of the game
     background = pygame.Surface(screen.get_size())
 
-    # Fill the color of the background
-    screen.fill(WHITE)
-
     # Unnecessary game loop variable
     loop = True
 
     # Tracks total frames rendered
     frames = 0
+
+    # The scores of the players
+    naegi_score = 0
+    kirigiri_score = 0
 
     while loop:
         # Limit the frame rate of the game to 30FPS
@@ -80,7 +81,6 @@ def main():
         ####################################################################
 
         grid = Grid()
-        grid.draw_grid()
 
         ####################################################################
         # Event Handling
@@ -93,10 +93,17 @@ def main():
         # Display updating
         ####################################################################
 
+        # Clear the screen for new blits
+        screen.fill(WHITE)
+
+        # Draw the grid
+        grid.draw_grid()
+
         # Display player ui
         players_ui = UI_Players()
         players_ui.draw_image()
         players_ui.draw_text()
+        players_ui.draw_score(naegi_score, kirigiri_score)
 
         # Update everything
         pygame.display.flip()

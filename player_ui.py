@@ -17,6 +17,23 @@ KIRIGIRI_COLOR = (200,160,200)
 text_font = pygame.font.Font(os.path.join(".", "orange_juice.ttf"), 48)
 
 class UI_Players():
+    def draw_score(self, naegi_score = 0, kirigiri_score = 0):
+        """
+        Draws the text for the two player's scores. Receives the said scores as
+        function arguments. Both are defaulted to 0 for testing cases.
+        """
+        screen = pygame.display.get_surface()
+
+        # Render Naegi's score text
+        naegi_text = text_font.render(str(naegi_score), 1, NAEGI_COLOR)
+        # Render Kirigiri's score text
+        kirigiri_text = text_font.render(str(kirigiri_score), 1,
+            KIRIGIRI_COLOR)
+
+        # Blit the two text
+        screen.blit(naegi_text, (960, 24))
+        screen.blit(kirigiri_text, (960, 308))
+
     def draw_text(self):
         """
         Draws the name text of the two players on screen.
