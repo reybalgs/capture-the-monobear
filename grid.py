@@ -108,6 +108,63 @@ class Grid():
             wall = pygame.draw.rect(screen, WALL_COLOR,
                     pygame.Rect(drawing_loc, (SQUARE_SIZE, SQUARE_SIZE)))
 
+    def move_player_forward(self, player):
+        """
+        Moves the location of the given player on the map forward, depending on
+        the current direction the player is facing.
+
+        This operates in similar principes as the move_player function.
+        """
+        # Let's check who the player we got is
+        if(player.name.lower() is 'naegi'):
+            player_type = NAEGI
+            print('Received NAEGI in move_player_forward')
+        else:
+            player_type = KIRIGIRI
+            print('Received KIRIGIRI in move_player_forward')
+
+        # Let's get the proposed new location of the player depending on the
+        # direction they are currently facing.
+        if(player.direction is 'up'):
+            new_location = (player.coordinates[X], player.coordinates[Y] - 1)
+        elif(player.direction is 'down'):
+            new_location = (player.coordinates[X], player.coordinates[Y] + 1)
+        elif(player.direction is 'left'):
+            new_location = (player.coordinates[X] - 1, player.coordinates[Y])
+        elif(player.direction is 'right'):
+            new_location = (player.coordinates[X] + 1, player.coordinates[Y])
+
+        # Check if the location is valid or not
+        try:
+            if(new_location[X] < 0 or new_location[Y] < 0 or new_location[X] >
+                    23 or new_location[Y] > 17):
+                raise OutOfGridRangeException(new_location)
+        except OutOfGridRangeException:
+            print('Exception: Given location ' + str(new_location) + ' is'
+                    ' invalid! Exiting')
+
+        # Get the node that we are going to move to
+        node = self.get_node_in_location(new_location)
+        # Get the old node of the player
+        old_node = self.get_node_in_location(player.coordinates)
+
+        # Now that that is out of the way, let's check if the new location is
+        # passable for the user.
+        if(node.contents is WALL or node.contents is KIRIGIRI or node.contents
+                is NAEGI):
+            # Impassable node up ahead!
+            print('Location ' + str(new_location) + ' contains impassable ' +
+                    'object.')
+        else:
+            # We can move through
+            # Set the coordinates of the player to the new location
+            player.coordinates = new_location
+            # Set the entity of the new location as the player
+            self.set_node_entity(new_location, player_type)
+            # Set the entity of the old location as empty
+            self.set_node_entity(old_node.coordinates, NONE)
+        
+
     def move_player(self, player, new_location):
         """
         Moves the location of the given player on the map.
@@ -138,7 +195,6 @@ class Grid():
         except OutOfGridRangeException:
             print('Exception: Given location ' + str(new_location) + ' is'
                     ' invalid! Exiting')
-            sys.exit(1)
 
         # Get the node that we are going to move to
         node = self.get_node_in_location(new_location)

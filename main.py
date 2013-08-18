@@ -113,8 +113,7 @@ def main():
 
         # Testing: Move Kirigiri upwards until she hits something
         if(kirigiri.coordinates[Y] > 0):
-            grid.move_player(kirigiri, (kirigiri.coordinates[X],
-                kirigiri.coordinates[Y] - 1))
+            grid.move_player_forward(kirigiri)
 
         ####################################################################
         # Event Handling
