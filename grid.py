@@ -311,6 +311,26 @@ class Grid():
             # Blit the trap in that location
             screen.blit(trap, drawing_loc)
 
+    def spawn_monokuma(self):
+        """
+        Spawns a random Monokuma somewhere in the grid, while also removing the
+        last existing one.
+        """
+        # First, let's get a list of nodes where Monokuma is in.
+        nodes = self.find_nodes_containing(MONOKUMA)
+
+        # Remove Monokuma on those nodes.
+        for node in nodes:
+            node.contents = NONE
+
+        random_location = (random.randint(0,23), random.randint(0,17))
+        # Generate a random location in the board.
+        while(self.get_node_in_location(random_location).contents is not NONE):
+            random_location = (random.randint(0,23), random.randint(0,17))
+
+        # Now let's put Monokuma on the random location.
+        self.get_node_in_location(random_location).contents = MONOKUMA
+
     def draw_monokuma(self):
         """
         Draws monokuma's sprite depending on his location in the board.

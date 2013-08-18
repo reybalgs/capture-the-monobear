@@ -122,6 +122,9 @@ def main():
         grid.move_player_forward(naegi)
         grid.move_player_forward(kirigiri)
 
+        # Randomize monokuma
+        grid.spawn_monokuma()
+
         ####################################################################
         # Event Handling
         ####################################################################
