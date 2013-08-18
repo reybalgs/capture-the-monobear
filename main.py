@@ -68,6 +68,9 @@ def main():
     # Tracks total frames rendered
     frames = 0
 
+    # Tracks the number of frames Monokuma has stayed untouched
+    monokuma_frames = 0
+
     # Initialzie the two players
     naegi = Player('Naegi')
     kirigiri = Player('Kirigiri')
@@ -77,11 +80,11 @@ def main():
 
     # DEBUG: Test entity drawing
     #grid.node_array[8][4].contents = MONOKUMA
-    grid.set_node_entity((4,8), MONOKUMA)
-    grid.set_node_entity((9,10), MONOKUMA)
-    grid.set_node_entity((15,4), MONOKUMA)
-    grid.set_node_entity((18,0), MONOKUMA)
-    grid.set_node_entity((3,11), MONOKUMA)
+    #grid.set_node_entity((4,8), MONOKUMA)
+    #grid.set_node_entity((9,10), MONOKUMA)
+    #grid.set_node_entity((15,4), MONOKUMA)
+    #grid.set_node_entity((18,0), MONOKUMA)
+    #grid.set_node_entity((3,11), MONOKUMA)
     #grid.set_node_entity((2,2), MONOKUMA)
     # Testing Naegi's location
     naegi.coordinates = (5,3)
@@ -103,6 +106,9 @@ def main():
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
+    # Initialize monokuma on the grid
+    grid.spawn_monokuma()
+
     while loop:
         # Limit the frame rate of the game
         if((FPS + naegi.score) > 15):
@@ -123,7 +129,13 @@ def main():
         grid.move_player_forward(kirigiri)
 
         # Randomize monokuma
-        grid.spawn_monokuma()
+        monokuma_frames += 1
+        if(monokuma_frames > (20 * FPS) or len(grid.find_nodes_containing(MONOKUMA)) is
+                0):
+            # Spawn monokuma when 15 frames have passed or there are no
+            # monokumas on the map
+            grid.spawn_monokuma()
+            monokuma_frames = 0
 
         ####################################################################
         # Event Handling
