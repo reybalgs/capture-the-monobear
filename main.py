@@ -21,7 +21,7 @@ SCREEN_X = 1024
 SCREEN_Y = 600
 
 # Game frame rate
-FPS = 10
+FPS = 2
 
 # Node size
 NODE_SIZE = 24
@@ -78,6 +78,10 @@ def main():
     # DEBUG: Test entity drawing
     #grid.node_array[8][4].contents = MONOKUMA
     grid.set_node_entity((4,8), MONOKUMA)
+    grid.set_node_entity((9,10), MONOKUMA)
+    grid.set_node_entity((15,4), MONOKUMA)
+    grid.set_node_entity((18,0), MONOKUMA)
+    grid.set_node_entity((3,11), MONOKUMA)
     #grid.set_node_entity((2,2), MONOKUMA)
     # Testing Naegi's location
     naegi.coordinates = (5,3)
@@ -100,8 +104,11 @@ def main():
     players_ui = UI_Players()
 
     while loop:
-        # Limit the frame rate of the game to 30FPS
-        clock.tick(FPS)
+        # Limit the frame rate of the game
+        if((FPS + naegi.score) > 15):
+            clock.tick(15)
+        else:
+            clock.tick(FPS + naegi.score)
 
         # Display frames rendered
         #frames += 1

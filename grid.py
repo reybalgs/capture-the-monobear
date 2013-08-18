@@ -157,6 +157,10 @@ class Grid():
             print('Location ' + str(new_location) + ' contains impassable ' +
                     'object.')
         else:
+            # Let's check if we grabbed Monokuma
+            if(node.contents is MONOKUMA):
+                # Increment the score of the player
+                player.score += 1
             # We can move through
             # Set the coordinates of the player to the new location
             player.coordinates = new_location
