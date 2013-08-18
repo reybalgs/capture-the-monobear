@@ -142,6 +142,7 @@ class Grid():
         except OutOfGridRangeException:
             print('Exception: Given location ' + str(new_location) + ' is'
                     ' invalid! Exiting')
+            return
 
         # Get the node that we are going to move to
         node = self.get_node_in_location(new_location)

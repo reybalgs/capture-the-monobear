@@ -21,7 +21,7 @@ SCREEN_X = 1024
 SCREEN_Y = 600
 
 # Game frame rate
-FPS = 2
+FPS = 10
 
 # Node size
 NODE_SIZE = 24
@@ -111,9 +111,9 @@ def main():
         # Game logic
         ####################################################################
 
-        # Testing: Move Kirigiri upwards until she hits something
-        if(kirigiri.coordinates[Y] > 0):
-            grid.move_player_forward(kirigiri)
+        # Move the two players in forwards in the direction they are facing
+        grid.move_player_forward(naegi)
+        grid.move_player_forward(kirigiri)
 
         ####################################################################
         # Event Handling
@@ -121,6 +121,20 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 loop = False
+            if event.type == KEYDOWN:
+                # User pressed a key on the keyboard
+                if event.key == K_DOWN:
+                    # Change the direction of Naegi to down
+                    naegi.direction = 'down'
+                elif event.key == K_UP:
+                    # Change the direction of Naegi to up
+                    naegi.direction = 'up'
+                elif event.key == K_RIGHT:
+                    # Change the direction of Naegi to right
+                    naegi.direction = 'right'
+                elif event.key == K_LEFT:
+                    # Change the direction of Naegi to left
+                    naegi.direction = 'left'
 
         ####################################################################
         # Display updating
