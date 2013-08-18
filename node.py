@@ -28,6 +28,12 @@ class Node():
         """
         return self.coordinates[Y]
 
+    def get_coordinates(self):
+        """
+        Returns the (x, y) coordinates of the Node.
+        """
+        return self.coordinates
+
     def __init__(self, coord_x = 0, coord_y = 0, contents = 0):
         # The contents of the node.
         self.contents = contents

@@ -21,7 +21,7 @@ SCREEN_X = 1024
 SCREEN_Y = 600
 
 # Game frame rate
-FPS = 30
+FPS = 2
 
 # Node size
 NODE_SIZE = 24
@@ -33,6 +33,10 @@ KIRIGIRI = 2
 WALL = 3
 TRAP = 4
 MONOKUMA = 5
+
+# Coordinates
+X = 0
+Y = 1
 
 # Colors
 WHITE = (255,255,255)
@@ -97,7 +101,7 @@ def main():
 
     while loop:
         # Limit the frame rate of the game to 30FPS
-        clock.tick(30)
+        clock.tick(FPS)
 
         # Display frames rendered
         #frames += 1
@@ -107,6 +111,10 @@ def main():
         # Game logic
         ####################################################################
 
+        # Testing: Move Kirigiri upwards until she hits something
+        if(kirigiri.coordinates[Y] > 0):
+            grid.move_player(kirigiri, (kirigiri.coordinates[X],
+                kirigiri.coordinates[Y] - 1))
 
         ####################################################################
         # Event Handling
