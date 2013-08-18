@@ -124,17 +124,24 @@ def main():
             if event.type == KEYDOWN:
                 # User pressed a key on the keyboard
                 if event.key == K_DOWN:
-                    # Change the direction of Naegi to down
-                    naegi.direction = 'down'
+                    if(naegi.direction != 'up'):
+                        # Change the direction of Naegi to down
+                        naegi.direction = 'down'
                 elif event.key == K_UP:
-                    # Change the direction of Naegi to up
-                    naegi.direction = 'up'
+                    if(naegi.direction != 'down'):
+                        # Change the direction of Naegi to up
+                        naegi.direction = 'up'
                 elif event.key == K_RIGHT:
-                    # Change the direction of Naegi to right
-                    naegi.direction = 'right'
+                    if(naegi.direction != 'left'):
+                        # Change the direction of Naegi to right
+                        naegi.direction = 'right'
                 elif event.key == K_LEFT:
-                    # Change the direction of Naegi to left
-                    naegi.direction = 'left'
+                    if(naegi.direction != 'right'):
+                        # Change the direction of Naegi to left
+                        naegi.direction = 'left'
+                elif event.key == K_ESCAPE:
+                    # Quit the game
+                    sys.exit(0)
 
         ####################################################################
         # Display updating
