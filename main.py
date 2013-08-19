@@ -140,8 +140,11 @@ def main():
         ####################################################################
 
         # Move the two players in forwards in the direction they are facing
-        grid.move_player_forward(naegi)
-        grid.move_player_forward(kirigiri)
+        # However, if they are currently trapped, do not move them.
+        if not naegi.trapped:
+            grid.move_player_forward(naegi)
+        if not kirigiri.trapped:
+            grid.move_player_forward(kirigiri)
 
         # Randomize monokuma
         monokuma_frames += 1
