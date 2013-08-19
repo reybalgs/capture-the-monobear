@@ -48,6 +48,8 @@ MOVE_COST = 10
 PLAYER_SMILE_FRAMES = 6
 # How long (frames) the players react on traps
 PLAYER_TRAP_FRAMES = 10
+# How long (frames) explosions occur
+EXPLOSION_FRAMES = 4
 
 # Global variables for movement
 dpad_up_pressed = False
@@ -76,6 +78,9 @@ def main():
     # Tracks the number of frames Monokuma has stayed untouched
     monokuma_frames = 0
 
+    # Tracks the number of frames for a batch of traps to stay
+    trap_frames = 0
+
     # Tracks the number of frames for Naegi to smile
     naegi_score_frames = 0
     # Tracks the number of frames for Kirigiri to smile
@@ -84,6 +89,9 @@ def main():
     naegi_trap_frames = 0
     # Tracks the nubmer of frames for Kirigiri to react to traps
     kirigiri_trap_frames = 0
+    # Tracks the number of frames for explosions to occur (also used for their
+    # resizing)
+    explosion_size_frames = 0
 
     # Initialzie the two players
     naegi = Player('Naegi')
@@ -109,9 +117,9 @@ def main():
     kirigiri.direction = 'up'
     grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
     # Testing traps
-    grid.set_node_entity((10,3), TRAP)
-    grid.set_node_entity((8,7), TRAP)
-    grid.set_node_entity((9,4), TRAP)
+    #grid.set_node_entity((10,3), TRAP)
+    #grid.set_node_entity((8,7), TRAP)
+    #grid.set_node_entity((9,4), TRAP)
     # Testing walls
     for i in range(3, 15):
         grid.set_node_entity((6, i), WALL)
@@ -123,6 +131,9 @@ def main():
 
     # Initialize monokuma on the grid
     grid.spawn_monokuma()
+
+    # Initialize traps on the grid
+    grid.spawn_traps()
 
     while loop:
         # Limit the frame rate of the game
@@ -150,10 +161,19 @@ def main():
         monokuma_frames += 1
         if(monokuma_frames > (20 * FPS) or len(grid.find_nodes_containing(MONOKUMA)) is
                 0):
-            # Spawn monokuma when 15 frames have passed or there are no
+            # Spawn monokuma when x frames have passed or there are no
             # monokumas on the map
             grid.spawn_monokuma()
             monokuma_frames = 0
+
+        # Randomize traps
+        trap_frames += 1
+        if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
+                0):
+            # Spawn traps when x frames have passed or there are no traps on
+            # the map
+            grid.spawn_traps()
+            trap_frames = 0
 
         # For the player's reaction faces
         # Scoring

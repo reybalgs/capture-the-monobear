@@ -325,6 +325,32 @@ class Grid():
             # Blit the trap in that location
             screen.blit(trap, drawing_loc)
 
+    def spawn_traps(self):
+        """
+        Spawns a random number of traps around the grid, while also removing
+        the traps prior to creation.
+        """
+        # Find the nodes where traps are currently in.
+        nodes = self.find_nodes_containing(TRAP)
+
+        # Remove the traps on those nodes.
+        for node in nodes:
+            node.contents = NONE
+
+        # Generate a random number of traps
+        num_traps = random.randint(1,8)
+
+        # Put these traps around the board
+        for i in range(0, num_traps):
+            # Generate a random location
+            random_location = (random.randint(0,23), random.randint(0,17))
+            while(self.get_node_in_location(random_location).contents is not
+                    NONE):
+                # Keep generating while we have conflicts
+                random_location = (random.randint(0,23), random.randint(0,17))
+            # Put the trap in that location
+            self.get_node_in_location(random_location).contents = TRAP
+
     def spawn_monokuma(self):
         """
         Spawns a random Monokuma somewhere in the grid, while also removing the
