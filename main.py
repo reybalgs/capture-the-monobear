@@ -223,6 +223,8 @@ def main():
         grid.draw_monokuma()
         grid.draw_walls()
         grid.draw_traps()
+        players_ui.draw_text()
+        players_ui.draw_score(naegi.score, kirigiri.score)
         grid.draw_player(naegi)
         grid.draw_player(kirigiri)
 
@@ -244,8 +246,6 @@ def main():
             players_ui.draw_image(False, False, False, True)
         else:
             players_ui.draw_image()
-        players_ui.draw_text()
-        players_ui.draw_score(naegi.score, kirigiri.score)
 
         # Update everything
         pygame.display.flip()
