@@ -53,16 +53,34 @@ class UI_Players():
         screen.blit(naegi_text, (792,24))
         screen.blit(kirigiri_text, (792,308))
 
-    def draw_image(self):
+    def draw_image(self, naegi_scored=False, kirigiri_scored=False,
+            naegi_trapped=False, kirigiri_trapped=False):
         """
         Draws the images of the two players on screen.
+
+        If <player>_scored is True, display the image of the player being happy
         """
         screen = pygame.display.get_surface()
 
         # Initialize Naegi's image
-        naegi = pygame.image.load(os.path.join("images", "naegi_full.png"))
-        kirigiri = pygame.image.load(os.path.join("images", 
-            "kirigiri_full.png"))
+        if(naegi_scored):
+            naegi = pygame.image.load(os.path.join("images",
+                "naegi_happy.png"))
+        elif(naegi_trapped):
+            naegi = pygame.image.load(os.path.join("images",
+                "naegi_frustrated.png"))
+        else:
+            naegi = pygame.image.load(os.path.join("images", "naegi_full.png"))
+        # Initialize Kirigiri's image
+        if(kirigiri_scored):
+            kirigiri = pygame.image.load(os.path.join("images",
+                "kirigiri_happy.png"))
+        elif(kirigiri_trapped):
+            kirigiri = pygame.image.load(os.path.join("images",
+                "kirigiri_frustrated.png"))
+        else:
+            kirigiri = pygame.image.load(os.path.join("images", 
+                "kirigiri_full.png"))
 
         # Get per pixel alpha transparency of the images
         naegi.convert_alpha()

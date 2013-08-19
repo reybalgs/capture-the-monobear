@@ -9,3 +9,5 @@ class Player():
         self.coordinates = coordinates
         self.direction = direction
         self.score = score
+        self.scored = False
+        self.trapped = False

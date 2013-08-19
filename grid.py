@@ -161,6 +161,20 @@ class Grid():
             if(node.contents is MONOKUMA):
                 # Increment the score of the player
                 player.score += 1
+                # Set the flag that the player has scored, this will help with
+                # the graphics
+                player.scored = True
+            # Now let's check if the player stepped on a trap
+            elif(node.contents is TRAP):
+                # Decrement the score of the player by two, but don't let it go
+                # to negative
+                if(player.score < 2):
+                    player.score = 0
+                else:
+                    player.score -= 2
+                # Set the flag that the player has been trapped, this will help
+                # with the graphics (and the movement)
+                player.trapped = True
             # We can move through
             # Set the coordinates of the player to the new location
             player.coordinates = new_location

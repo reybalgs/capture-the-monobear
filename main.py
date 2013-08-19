@@ -44,6 +44,11 @@ WHITE = (255,255,255)
 # Movement cost
 MOVE_COST = 10
 
+# How long (frames) the players smile when scoring
+PLAYER_SMILE_FRAMES = 6
+# How long (frames) the players react on traps
+PLAYER_TRAP_FRAMES = 10
+
 # Global variables for movement
 dpad_up_pressed = False
 dpad_down_pressed = False
@@ -71,6 +76,15 @@ def main():
     # Tracks the number of frames Monokuma has stayed untouched
     monokuma_frames = 0
 
+    # Tracks the number of frames for Naegi to smile
+    naegi_score_frames = 0
+    # Tracks the number of frames for Kirigiri to smile
+    kirigiri_score_frames = 0
+    # Tracks the number of frames for Naegi to react to traps
+    naegi_trap_frames = 0
+    # Tracks the nubmer of frames for Kirigiri to react to traps
+    kirigiri_trap_frames = 0
+
     # Initialzie the two players
     naegi = Player('Naegi')
     kirigiri = Player('Kirigiri')
@@ -97,6 +111,7 @@ def main():
     # Testing traps
     grid.set_node_entity((10,3), TRAP)
     grid.set_node_entity((8,7), TRAP)
+    grid.set_node_entity((9,4), TRAP)
     # Testing walls
     for i in range(3, 15):
         grid.set_node_entity((6, i), WALL)
@@ -136,6 +151,34 @@ def main():
             # monokumas on the map
             grid.spawn_monokuma()
             monokuma_frames = 0
+
+        # For the player's reaction faces
+        # Scoring
+        if(naegi.scored):
+            naegi_score_frames += 1
+        elif(kirigiri.scored):
+            kirigiri_score_frames += 1
+        # Trapping
+        if(naegi.trapped):
+            naegi_trap_frames += 1
+        if(kirigiri.trapped):
+            kirigiri_trap_frames += 1
+
+        # Reset scored player faces when frames have been reached
+        if(naegi_score_frames >= PLAYER_SMILE_FRAMES):
+            naegi.scored = False
+            naegi_score_frames = 0
+        if(kirigiri_score_frames >= PLAYER_SMILE_FRAMES):
+            kirigiri.scored = False
+            kirigiri_score_frames = 0
+
+        # Reset trapped player faces when frames have been reached
+        if(naegi_trap_frames >= PLAYER_TRAP_FRAMES):
+            naegi.trapped = False
+            naegi_trap_frames = 0
+        if(kirigiri_trap_frames >= PLAYER_TRAP_FRAMES):
+            kirigiri.trapped = False
+            kirigiri_score_frames = 0
 
         ####################################################################
         # Event Handling
@@ -181,7 +224,23 @@ def main():
         grid.draw_player(kirigiri)
 
         # Display player ui
-        players_ui.draw_image()
+        # Naegi scoring
+        if(naegi_score_frames > 0 and naegi_score_frames <
+                PLAYER_SMILE_FRAMES):
+            players_ui.draw_image(True, False)
+        # Kirigiri scoring
+        elif(kirigiri_score_frames > 0 and kirigiri_score_frames <
+                PLAYER_SMILE_FRAMES):
+            players_ui.draw_image(False, True)
+        # Naegi trapped
+        elif(naegi_trap_frames > 0 and naegi_trap_frames < PLAYER_TRAP_FRAMES):
+            players_ui.draw_image(False, False, True)
+        # Kirigiri trapped
+        elif(kirigiri_trap_frames > 0 and kirigiri_trap_frames <
+                PLAYER_TRAP_FRAMES):
+            players_ui.draw_image(False, False, False, True)
+        else:
+            players_ui.draw_image()
         players_ui.draw_text()
         players_ui.draw_score(naegi.score, kirigiri.score)
 
