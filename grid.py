@@ -364,6 +364,17 @@ class Grid():
             # Put the trap in that location
             self.get_node_in_location(random_location).contents = TRAP
 
+    def get_random_empty_location(self):
+        """
+        Returns a randomly chosen empty location somewhere in the grid. Perfect
+        for initial spawning of the players.
+        """
+        # Let's get a list of blank nodes.
+        nodes = self.find_nodes_containing(NONE)
+
+        # Return a random node's location from that list
+        return random.choice(nodes).coordinates
+
     def spawn_monokuma(self):
         """
         Spawns a random Monokuma somewhere in the grid, while also removing the

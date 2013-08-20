@@ -112,32 +112,40 @@ def main():
     #grid.set_node_entity((3,11), MONOKUMA)
     #grid.set_node_entity((2,2), MONOKUMA)
     # Testing Naegi's location
-    naegi.coordinates = (5,3)
-    naegi.direction = 'down'
-    grid.set_node_entity(naegi.coordinates, NAEGI)
+    #naegi.coordinates = (5,3)
+    #naegi.direction = 'down'
     # Testing Kirigiri's location
-    kirigiri.coordinates = (10,5)
-    kirigiri.direction = 'up'
+    #kirigiri.coordinates = (7,5)
+    #kirigiri.direction = 'up'
     grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
     # Testing traps
-    grid.set_node_entity((12,5), TRAP)
+    #grid.set_node_entity((12,5), TRAP)
     #grid.set_node_entity((8,7), TRAP)
     #grid.set_node_entity((9,4), TRAP)
     # Testing walls
-    for i in range(1, 8):
+    for i in range(3, 8):
         grid.set_node_entity((6, i), WALL)
-    for i in range(1, 8):
-        grid.set_node_entity((18, i), WALL)
+    for i in range(3, 8):
+        grid.set_node_entity((17, i), WALL)
+    for i in range(6,18):
+        grid.set_node_entity((i, 14), WALL)
 
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
     # Initialize monokuma on the grid
-    #grid.spawn_monokuma()
-    grid.set_node_entity((15,5), MONOKUMA)
+    grid.spawn_monokuma()
+    #grid.set_node_entity((15,5), MONOKUMA)
 
     # Initialize traps on the grid
-    #grid.spawn_traps()
+    grid.spawn_traps()
+
+    # Randomize Naegi's location
+    naegi.coordinates = grid.get_random_empty_location()
+    grid.set_node_entity(naegi.coordinates, NAEGI)
+    # Randomize Kirigiri's location
+    kirigiri.coordinates = grid.get_random_empty_location()
+    grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
 
     # Initialize the pathfinder for the AI
     pathfinder = Pathfinder(grid,
@@ -163,12 +171,8 @@ def main():
         # Game logic
         ####################################################################
 
-        # Move the two players in forwards in the direction they are facing
-        # However, if they are currently trapped, do not move them.
-        if not naegi.trapped:
-            grid.move_player_forward(naegi)
-        if not kirigiri.trapped:
-            grid.move_player_forward(kirigiri)
+        # Update the current location of the AI
+        pathfinder.start_node = grid.get_node_in_location(kirigiri.coordinates)
 
         # Randomize monokuma
         monokuma_frames += 1
@@ -179,16 +183,17 @@ def main():
             grid.spawn_monokuma()
             monokuma_frames = 0
             # Update the start node of the pathfinder
-            pathfinder.start_node = grid.get_node_in_location(
-                    kirigiri.coordinates)
-            # Make the pathfinder find a new path
-            pathfinder.find_path_to_monokuma()
+            if(len(grid.find_nodes_containing(MONOKUMA))):
+                pathfinder.start_node = grid.get_node_in_location(
+                        kirigiri.coordinates)
+                # Make the pathfinder find a new path
+                pathfinder.find_path_to_monokuma()
 
         # Initialize the first path of the pathfinder
-        pathfinder.find_path_to_monokuma()
+        #pathfinder.find_path_to_monokuma()
         # Turn the AI in the direction it's supposed to turn to
-        kirigiri.direction = pathfinder.get_direction_to_next_node(
-                grid.get_node_in_location(kirigiri.coordinates))
+        #kirigiri.direction = pathfinder.get_direction_to_next_node(
+        #        grid.get_node_in_location(kirigiri.coordinates))
 
         # Randomize traps
         trap_frames += 1
@@ -202,6 +207,13 @@ def main():
         # Turn the AI in the direction it's supposed to turn to
         kirigiri.direction = pathfinder.get_direction_to_next_node(
                 grid.get_node_in_location(kirigiri.coordinates))
+
+        # Move the two players in forwards in the direction they are facing
+        # However, if they are currently trapped, do not move them.
+        if not naegi.trapped:
+            grid.move_player_forward(naegi)
+        if not kirigiri.trapped:
+            grid.move_player_forward(kirigiri)
 
         # For the player's reaction faces
         # Scoring
@@ -267,7 +279,7 @@ def main():
         screen.fill(WHITE)
 
         # Draw the grid and its elements
-        grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
+        #grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
         grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
         grid.draw_grid()
         grid.draw_monokuma()

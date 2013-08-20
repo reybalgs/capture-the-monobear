@@ -193,6 +193,8 @@ class Pathfinder():
 
         while not self.is_monokuma_in_closed_list():
             # Keep running the A* algorithm while Monokuma is still not found
+            # Clean up the open list
+            self.open_list = []
             # Add the adjacent nodes from the end of the closed list to the
             # open list
             for node in self.find_adjacent_nodes(
@@ -201,6 +203,10 @@ class Pathfinder():
             self.print_closed_list()
             self.print_open_list()
             # Now let's find the best node
+            if(len(self.open_list) == 0):
+                print('No open nodes!')
+                print('Monokuma node is at ' + str(monokuma_node.coordinates))
+                pdb.set_trace()
             best_node = self.open_list[0]
             for node in self.open_list:
                 node_score = (self.get_movement_cost(node) +
