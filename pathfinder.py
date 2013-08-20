@@ -47,11 +47,13 @@ class Pathfinder():
         next node in its path list.
         """
 
+        print('Current node is at ' + str(current_node.coordinates))
         # Find the index of the current node in relation to the closed list
         index = self.closed_list.index(current_node)
 
         # Get the next node from the current node in the list
         next_node = self.closed_list[index + 1]
+        print('Next node is at ' + str(next_node.coordinates))
 
         # Return the direction the AI needs to point to, depending on the
         # location of the next node
@@ -159,19 +161,17 @@ class Pathfinder():
 
         return x_diff + y_diff
 
-    def get_movement_cost(self, start_node, end_node):
+    def get_movement_cost(self, node):
         """
         Finds the movement cost needed to traverse from the start_node to the
         end_node.
 
         Returns the value G used in the A* algorithm.
         """
-        # Find the X difference between the two nodes
-        x_diff = (math.fabs(start_node.getX() - end_node.getX())) * MOVEMENT_COST
-        # Find the Y difference between the two nodes
-        y_diff = (math.fabs(start_node.getY() - end_node.getY())) * MOVEMENT_COST
+        # Find the travel cost as we move through the closed list.
+        cost = MOVEMENT_COST * (len(self.closed_list) - 1)
 
-        return x_diff + y_diff
+        return cost + MOVEMENT_COST
 
     def find_path_to_monokuma(self):
         """
@@ -203,9 +203,9 @@ class Pathfinder():
             # Now let's find the best node
             best_node = self.open_list[0]
             for node in self.open_list:
-                node_score = (self.get_movement_cost(self.start_node, node) +
+                node_score = (self.get_movement_cost(node) +
                         self.manhattan_heuristic(node, monokuma_node))
-                best_score = (self.get_movement_cost(self.start_node,
+                best_score = (self.get_movement_cost(
                     best_node) + self.manhattan_heuristic(best_node,
                     monokuma_node))
                 print('Best node is currently at ' + str(best_node.coordinates)
