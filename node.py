@@ -20,13 +20,17 @@ class Node():
         """
         Returns the x coordinate of the Node.
         """
-        return self.coordinates[X]
+        x = self.coordinates[X]
+
+        return x
 
     def getY(self):
         """
         Returns the y coordinate of the Node.
         """
-        return self.coordinates[Y]
+        y = self.coordinates[Y]
+
+        return y
 
     def get_coordinates(self):
         """

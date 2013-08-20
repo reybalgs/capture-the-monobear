@@ -5,12 +5,13 @@
 # Main python file. Run this to run the game.
 
 # Important imports
-import random, os, sys, pygame
+import random, os, sys, pygame, pdb
 from pygame.locals import *
 
 from grid import *
 from player_ui import *
 from player import *
+from pathfinder import *
 
 #############################################################################
 # CONSTANTS AND CRAP
@@ -40,6 +41,8 @@ Y = 1
 
 # Colors
 WHITE = (255,255,255)
+OPEN_LIST_COLOR = pygame.Color(0,180,0,150)
+CLOSED_LIST_COLOR = pygame.Color(180,0,0,150)
 
 # Movement cost
 MOVE_COST = 10
@@ -130,10 +133,16 @@ def main():
     players_ui = UI_Players()
 
     # Initialize monokuma on the grid
-    grid.spawn_monokuma()
+    #grid.spawn_monokuma()
+    grid.set_node_entity((12,16), MONOKUMA)
 
     # Initialize traps on the grid
     grid.spawn_traps()
+
+    # Initialize the pathfinder for the AI
+    pathfinder = Pathfinder(grid,
+            grid.get_node_in_location(kirigiri.coordinates))
+    # Initialize the first path of the pathfinder
 
     while loop:
         # Limit the frame rate of the game
@@ -150,6 +159,10 @@ def main():
         # Game logic
         ####################################################################
 
+        # Update the start node of the pathfinder
+        pathfinder.start_node = grid.get_node_in_location(kirigiri.coordinates)
+        pathfinder.find_path_to_monokuma()
+
         # Move the two players in forwards in the direction they are facing
         # However, if they are currently trapped, do not move them.
         if not naegi.trapped:
@@ -164,6 +177,8 @@ def main():
             # Spawn monokuma when x frames have passed or there are no
             # monokumas on the map
             grid.spawn_monokuma()
+            # Make the pathfinder find a new path
+            pathfinder.find_path_to_monokuma()
             monokuma_frames = 0
 
         # Randomize traps
@@ -247,6 +262,8 @@ def main():
         players_ui.draw_score(naegi.score, kirigiri.score)
         grid.draw_player(naegi)
         grid.draw_player(kirigiri)
+        #grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
+        #grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
 
         # Display player ui
         # Naegi scoring

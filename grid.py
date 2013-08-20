@@ -108,6 +108,19 @@ class Grid():
             wall = pygame.draw.rect(screen, WALL_COLOR,
                     pygame.Rect(drawing_loc, (SQUARE_SIZE, SQUARE_SIZE)))
 
+    def highlight_path(self, path, color=(200,0,0,100)):
+        """
+        Highlights a list of nodes provided as an argument. Useful for tracing
+        the pathfinding of the AI.
+        """
+        screen = pygame.display.get_surface()
+        for node in path:
+            # Draw a translucent rectangle over the node. Color depends on the
+            # argument provided
+            rect = pygame.draw.rect(screen, color,
+                    pygame.Rect(self.get_drawing_coordinates(
+                    node.get_coordinates()), (SQUARE_SIZE, SQUARE_SIZE)))
+
     def move_player_forward(self, player):
         """
         Moves the location of the given player on the map forward, depending on
