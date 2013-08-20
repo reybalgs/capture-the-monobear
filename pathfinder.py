@@ -77,9 +77,9 @@ class Pathfinder():
         # Add the north node
         if((node.getY() - 1) >= 0 and
                 (self.grid.get_node_in_location((node.getX(), node.getY() -
-                1)).contents is NONE or
+                1)).contents is not WALL and
                 self.grid.get_node_in_location((node.getX(), node.getY() -
-                1)).contents is MONOKUMA and not
+                1)).contents is not TRAP and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((
                     node.getX(), node.getY() - 1))))):
             print('North node added')
@@ -88,9 +88,9 @@ class Pathfinder():
         # Add the south node
         if((node.getY() + 1) <= 17 and
                 (self.grid.get_node_in_location((node.getX(), node.getY() +
-                1)).contents is NONE or
+                1)).contents is not WALL and
                 self.grid.get_node_in_location((node.getX(), node.getY() +
-                1)).contents is MONOKUMA)and not
+                1)).contents is not TRAP)and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((
                     node.getX(), node.getY() + 1)))):
             print('South node added')
@@ -99,9 +99,9 @@ class Pathfinder():
         # Add the east node
         if((node.getX() + 1) <= 23 and
                 (self.grid.get_node_in_location((node.getX() + 1,
-                node.getY())).contents is NONE or
+                node.getY())).contents is not WALL and
                 self.grid.get_node_in_location((node.getX() + 1,
-                node.getY())).contents is MONOKUMA) and not
+                node.getY())).contents is not TRAP) and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((node.getX()
                     + 1, node.getY())))):
             print('East node added')
@@ -110,9 +110,9 @@ class Pathfinder():
         # Add the west node
         if((node.getX() - 1) >= 0 and
                 (self.grid.get_node_in_location((node.getX() - 1,
-                node.getY())).contents is NONE or
+                node.getY())).contents is not WALL and
                 self.grid.get_node_in_location((node.getX() - 1,
-                node.getY())).contents is MONOKUMA) and not
+                node.getY())).contents is not TRAP) and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((node.getX()
                     - 1, node.getY())))):
             print('West node added')

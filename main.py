@@ -133,16 +133,17 @@ def main():
     players_ui = UI_Players()
 
     # Initialize monokuma on the grid
-    #grid.spawn_monokuma()
-    grid.set_node_entity((12,16), MONOKUMA)
+    grid.spawn_monokuma()
+    #grid.set_node_entity((12,16), MONOKUMA)
 
     # Initialize traps on the grid
-    grid.spawn_traps()
+    #grid.spawn_traps()
 
     # Initialize the pathfinder for the AI
     pathfinder = Pathfinder(grid,
             grid.get_node_in_location(kirigiri.coordinates))
     # Initialize the first path of the pathfinder
+    pathfinder.find_path_to_monokuma()
 
     while loop:
         # Limit the frame rate of the game
@@ -161,7 +162,6 @@ def main():
 
         # Update the start node of the pathfinder
         pathfinder.start_node = grid.get_node_in_location(kirigiri.coordinates)
-        pathfinder.find_path_to_monokuma()
 
         # Move the two players in forwards in the direction they are facing
         # However, if they are currently trapped, do not move them.
@@ -182,13 +182,13 @@ def main():
             monokuma_frames = 0
 
         # Randomize traps
-        trap_frames += 1
-        if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
-                0):
+        #trap_frames += 1
+        #if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
+        #        0):
             # Spawn traps when x frames have passed or there are no traps on
             # the map
-            grid.spawn_traps()
-            trap_frames = 0
+        #    grid.spawn_traps()
+        #    trap_frames = 0
 
         # For the player's reaction faces
         # Scoring
@@ -253,7 +253,9 @@ def main():
         # Clear the screen for new blits
         screen.fill(WHITE)
 
-        # Draw the grid
+        # Draw the grid and its elements
+        grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
+        grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
         grid.draw_grid()
         grid.draw_monokuma()
         grid.draw_walls()
@@ -262,8 +264,6 @@ def main():
         players_ui.draw_score(naegi.score, kirigiri.score)
         grid.draw_player(naegi)
         grid.draw_player(kirigiri)
-        #grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
-        #grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
 
         # Display player ui
         # Naegi scoring
