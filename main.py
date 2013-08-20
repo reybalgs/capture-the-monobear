@@ -137,7 +137,7 @@ def main():
     #grid.set_node_entity((12,16), MONOKUMA)
 
     # Initialize traps on the grid
-    #grid.spawn_traps()
+    grid.spawn_traps()
 
     # Initialize the pathfinder for the AI
     pathfinder = Pathfinder(grid,
@@ -182,13 +182,13 @@ def main():
             monokuma_frames = 0
 
         # Randomize traps
-        #trap_frames += 1
-        #if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
-        #        0):
+        trap_frames += 1
+        if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
+                0):
             # Spawn traps when x frames have passed or there are no traps on
             # the map
-        #    grid.spawn_traps()
-        #    trap_frames = 0
+            grid.spawn_traps()
+            trap_frames = 0
 
         # For the player's reaction faces
         # Scoring
