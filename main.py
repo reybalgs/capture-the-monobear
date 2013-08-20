@@ -160,16 +160,6 @@ def main():
         # Game logic
         ####################################################################
 
-        # Update the start node of the pathfinder
-        pathfinder.start_node = grid.get_node_in_location(kirigiri.coordinates)
-
-        # Move the two players in forwards in the direction they are facing
-        # However, if they are currently trapped, do not move them.
-        if not naegi.trapped:
-            grid.move_player_forward(naegi)
-        if not kirigiri.trapped:
-            grid.move_player_forward(kirigiri)
-
         # Randomize monokuma
         monokuma_frames += 1
         if(monokuma_frames > (20 * FPS) or len(grid.find_nodes_containing(MONOKUMA)) is
@@ -177,6 +167,9 @@ def main():
             # Spawn monokuma when x frames have passed or there are no
             # monokumas on the map
             grid.spawn_monokuma()
+            # Update the start node of the pathfinder
+            pathfinder.start_node = grid.get_node_in_location(
+                    kirigiri.coordinates)
             # Make the pathfinder find a new path
             pathfinder.find_path_to_monokuma()
             monokuma_frames = 0
@@ -189,6 +182,17 @@ def main():
             # the map
             grid.spawn_traps()
             trap_frames = 0
+
+        # Turn the AI in the direction it's supposed to turn to
+        kirigiri.direction = pathfinder.get_direction_to_next_node(
+                grid.get_node_in_location(kirigiri.coordinates))
+
+        # Move the two players in forwards in the direction they are facing
+        # However, if they are currently trapped, do not move them.
+        if not naegi.trapped:
+            grid.move_player_forward(naegi)
+        if not kirigiri.trapped:
+            grid.move_player_forward(kirigiri)
 
         # For the player's reaction faces
         # Scoring

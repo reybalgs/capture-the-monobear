@@ -41,6 +41,29 @@ class Pathfinder():
         for node in self.open_list:
             print(str(node.coordinates))
 
+    def get_direction_to_next_node(self, current_node):
+        """
+        Returns the direction that the AI should turn to in order to reach the
+        next node in its path list.
+        """
+
+        # Find the index of the current node in relation to the closed list
+        index = self.closed_list.index(current_node)
+
+        # Get the next node from the current node in the list
+        next_node = self.closed_list[index + 1]
+
+        # Return the direction the AI needs to point to, depending on the
+        # location of the next node
+        if(next_node.getX() > current_node.getX()):
+            return 'right'
+        elif(next_node.getX() < current_node.getX()):
+            return 'left'
+        elif(next_node.getY() > current_node.getY()):
+            return 'down'
+        elif(next_node.getY() < current_node.getY()):
+            return 'up'
+
     def is_monokuma_in_closed_list(self):
         """
         Function that simply checks if monokuma is already in the closed list,
