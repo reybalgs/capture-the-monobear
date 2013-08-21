@@ -152,9 +152,7 @@ class Grid():
             if(new_location[X] < 0 or new_location[Y] < 0 or new_location[X] >
                     23 or new_location[Y] > 17):
                 raise OutOfGridRangeException(new_location)
-        except OutOfGridRangeException:
-            print('Exception: Given location ' + str(new_location) + ' is'
-                    ' invalid! Exiting')
+        except:
             return
 
         # Get the node that we are going to move to
@@ -248,6 +246,22 @@ class Grid():
             self.set_node_entity(new_location, player_type)
             # Set the entity of the old location as empty
             self.set_node_entity(old_node.coordinates, NONE)
+
+    def spawn_walls(self, pattern='quad'):
+        """
+        Draws a predefined pattern of walls, also depending on the argument
+        given.
+        """
+        if pattern is 'quad':
+            # Create a quad pattern of walls
+            # The top  and bottom horizontal walls
+            for i in range(5, 18):
+                self.set_node_entity((i, 4), WALL)
+                self.set_node_entity((i, 12), WALL)
+            # The left and right vertical walls
+            for i in range(5, 11):
+                self.set_node_entity((3, i), WALL)
+                self.set_node_entity((19, i), WALL)
 
     def draw_player(self, player):
         """

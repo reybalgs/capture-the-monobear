@@ -49,10 +49,16 @@ class Pathfinder():
 
         print('Current node is at ' + str(current_node.coordinates))
         # Find the index of the current node in relation to the closed list
-        index = self.closed_list.index(current_node)
+        try:
+            index = self.closed_list.index(current_node)
+        except:
+            return 1
 
         # Get the next node from the current node in the list
-        next_node = self.closed_list[index + 1]
+        try:
+            next_node = self.closed_list[index + 1]
+        except:
+            return 1
         print('Next node is at ' + str(next_node.coordinates))
 
         # Return the direction the AI needs to point to, depending on the
@@ -104,9 +110,9 @@ class Pathfinder():
                 (self.grid.get_node_in_location((node.getX(), node.getY() -
                 1)).contents is not WALL and
                 self.grid.get_node_in_location((node.getX(), node.getY() -
-                1)).contents is not TRAP and not
+                1)).contents is not TRAP) and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((
-                    node.getX(), node.getY() - 1))))):
+                    node.getX(), node.getY() - 1)))):
             print('North node added')
             adjacent_nodes.append(self.grid.get_node_in_location((node.getX(),
                 node.getY() - 1)))
@@ -115,7 +121,7 @@ class Pathfinder():
                 (self.grid.get_node_in_location((node.getX(), node.getY() +
                 1)).contents is not WALL and
                 self.grid.get_node_in_location((node.getX(), node.getY() +
-                1)).contents is not TRAP)and not
+                1)).contents is not TRAP) and not
                 self.is_node_in_closed_list(self.grid.get_node_in_location((
                     node.getX(), node.getY() + 1)))):
             print('South node added')
@@ -161,6 +167,11 @@ class Pathfinder():
 
         return x_diff + y_diff
 
+    def get_movement_cost_old(self, node):
+        return ((math.fabs(node.getX() - self.start_node.getX()) *
+            MOVEMENT_COST) + (math.fabs(node.getY() - self.start_node.getY()) *
+                MOVEMENT_COST))
+
     def get_movement_cost(self, node):
         """
         Finds the movement cost needed to traverse from the start_node to the
@@ -192,21 +203,27 @@ class Pathfinder():
         self.closed_list.append(self.start_node)
 
         while not self.is_monokuma_in_closed_list():
+            last_closed_node = self.closed_list[len(self.closed_list) - 1]
+            adjacent_nodes = self.find_adjacent_nodes(last_closed_node)
             # Keep running the A* algorithm while Monokuma is still not found
-            # Clean up the open list
-            self.open_list = []
+            if(len(adjacent_nodes)):
+                # Clean up the open list
+                print('Adjacent node list has length ' +
+                    str(len(adjacent_nodes)) + ' cleaning up open list!')
+                self.open_list = []
             # Add the adjacent nodes from the end of the closed list to the
             # open list
-            for node in self.find_adjacent_nodes(
-                    self.closed_list[len(self.closed_list) - 1]):
+            for node in adjacent_nodes:
+                print('Node at ' + str(node.coordinates) + ' found as an ' +
+                        'adjacent node!')
                 self.open_list.append(node)
             self.print_closed_list()
             self.print_open_list()
             # Now let's find the best node
             if(len(self.open_list) == 0):
-                print('No open nodes!')
+                print('No open nodes! Returning to game function')
                 print('Monokuma node is at ' + str(monokuma_node.coordinates))
-                pdb.set_trace()
+                return
             best_node = self.open_list[0]
             for node in self.open_list:
                 node_score = (self.get_movement_cost(node) +
@@ -241,6 +258,25 @@ class Pathfinder():
                                 ' with ' +
                                 str(self.manhattan_heuristic(best_node,
                                 monokuma_node)))
+                        best_node = node
+                    # If H values are the same, let's favor the one with the
+                    # lower G cost.
+                    elif(self.get_movement_cost(node) <
+                            self.get_movement_cost(best_node)):
+                        print('Node on ' + str(node.coordinates) + ' has ' +
+                                'equal F score with node ' +
+                                str(best_node.coordinates) + ' (' +
+                                str(node_score) + '), however, node G value ' +
+                                str(self.get_movement_cost(node)) + ' is ' +
+                                'lower than best node with ' +
+                                str(self.get_movement_cost(best_node)))
+                        best_node = node
+                    # If they are really the same, just get the latest one
+                    else:
+                        print('Both current node ' + str(node.coordinates) + 
+                                ' and best node ' + str(best_node.coordinates)
+                                + ' has same G and H scores, choosing ' +
+                                'current node.')
                         best_node = node
             # Remove the best node from the open list
             self.open_list.pop(self.open_list.index(best_node))
