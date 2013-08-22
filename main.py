@@ -41,8 +41,9 @@ Y = 1
 
 # Colors
 WHITE = (255,255,255)
-OPEN_LIST_COLOR = pygame.Color(0,180,0,150)
-CLOSED_LIST_COLOR = pygame.Color(180,0,0,150)
+OPEN_LIST_COLOR = pygame.Color(0,200,0,150)
+CLOSED_LIST_COLOR = pygame.Color(200,0,0,150)
+PATH_LIST_COLOR = pygame.Color(200,200,0,150)
 
 # Movement cost
 MOVE_COST = 10
@@ -131,24 +132,24 @@ def main():
     #    grid.set_node_entity((i, 14), WALL)
 
     # Initialize the walls
-    #grid.spawn_walls()
+    grid.spawn_walls()
 
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
     # Initialize monokuma on the grid
-    #grid.spawn_monokuma()
-    grid.set_node_entity((10,5), MONOKUMA)
+    grid.spawn_monokuma()
+    #grid.set_node_entity((10,5), MONOKUMA)
 
     # Initialize traps on the grid
-    #grid.spawn_traps()
+    grid.spawn_traps()
 
     # Randomize Naegi's location
     naegi.coordinates = grid.get_random_empty_location()
     grid.set_node_entity(naegi.coordinates, NAEGI)
     # Randomize Kirigiri's location
-    #kirigiri.coordinates = grid.get_random_empty_location()
-    kirigiri.coordinates = (6,6)
+    kirigiri.coordinates = grid.get_random_empty_location()
+    #kirigiri.coordinates = (6,6)
     grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
 
     # Initialize the pathfinder for the AI
@@ -166,7 +167,7 @@ def main():
         #    clock.tick(15)
         #else:
         #    clock.tick(FPS + naegi.score)
-        clock.tick(5)
+        clock.tick(8)
 
         # Display frames rendered
         #frames += 1
@@ -195,20 +196,19 @@ def main():
             pathfinder.find_path_to_monokuma_v2()
 
         # Randomize traps
-        #trap_frames += 1
-        #if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
-        #        0):
-        #    # Spawn traps when x frames have passed or there are no traps on
-        #    # the map
-        #    grid.spawn_traps()
-        #    trap_frames = 0
-        #    # Update the start node of the pathfinder
-        #    if(len(grid.find_nodes_containing(MONOKUMA))):
-        #        pathfinder.start_node = grid.get_node_in_location(
-        #                kirigiri.coordinates)
-        #        # Make the pathfinder find a new path
-        #        pathfinder.find_path_to_monokuma_v2()
-
+        trap_frames += 1
+        if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
+                0):
+            # Spawn traps when x frames have passed or there are no traps on
+            # the map
+            grid.spawn_traps()
+            trap_frames = 0
+            # Update the start node of the pathfinder
+            if(len(grid.find_nodes_containing(MONOKUMA))):
+                pathfinder.start_node = grid.get_node_in_location(
+                        kirigiri.coordinates)
+                # Make the pathfinder find a new path
+                pathfinder.find_path_to_monokuma_v2()
         # Turn the AI in the direction it's supposed to turn to
         #if(len(pathfinder.path)):
         kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
@@ -288,6 +288,7 @@ def main():
         # Draw the grid and its elements
         grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
         grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
+        grid.highlight_path(pathfinder.path, PATH_LIST_COLOR)
         grid.draw_grid()
         grid.draw_monokuma()
         grid.draw_walls()
