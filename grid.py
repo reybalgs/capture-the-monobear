@@ -155,6 +155,7 @@ class Grid():
         except:
             return
 
+        print('New location is ' + str(new_location))
         # Get the node that we are going to move to
         node = self.get_node_in_location(new_location)
         # Get the old node of the player
@@ -166,7 +167,7 @@ class Grid():
                 is NAEGI):
             # Impassable node up ahead!
             print('Location ' + str(new_location) + ' contains impassable ' +
-                    'object.')
+                    'object: ' + str(node.contents))
         else:
             # Let's check if we grabbed Monokuma
             if(node.contents is MONOKUMA):
@@ -277,6 +278,57 @@ class Grid():
             for i in range(15, 18):
                 self.set_node_entity((6, i), WALL)
                 self.set_node_entity((16, i), WALL)
+        elif pattern is 'face':
+            for i in range(4, 8):
+                self.set_node_entity((5, i), WALL)
+            for i in range(4, 8):
+                self.set_node_entity((17, i), WALL)
+            for i in range(5,18):
+                self.set_node_entity((i, 14), WALL)
+        elif pattern is 'arrows':
+            # Arrows that extend from the corners
+            # Topleft arrow
+            for i in range(1, 8):
+                self.set_node_entity((i,i), WALL)
+            for i in range(3, 8):
+                self.set_node_entity((i,7), WALL)
+                self.set_node_entity((7,i), WALL)
+            # Topright arrow
+            self.set_node_entity((16,7), WALL)
+            self.set_node_entity((17,6), WALL)
+            self.set_node_entity((18,5), WALL)
+            self.set_node_entity((19,4), WALL)
+            self.set_node_entity((20,3), WALL)
+            self.set_node_entity((21,2), WALL)
+            self.set_node_entity((22,1), WALL)
+            for i in range(16, 21):
+                self.set_node_entity((i, 7), WALL)
+            for i in range(3, 7):
+                self.set_node_entity((16, i), WALL)
+            # Bottomright arrow
+            for i in range(16, 9, -1):
+                self.set_node_entity((i + 6,i), WALL)
+            for i in range(16, 21):
+                self.set_node_entity((i,10), WALL)
+            for i in range(10, 15):
+                self.set_node_entity((16, i), WALL)
+            # Bottomright arrow
+            for i in range(1, 8):
+                self.set_node_entity((i, 17 - i), WALL)
+            for i in range(10, 15):
+                self.set_node_entity((7, i), WALL)
+            for i in range(3, 8): 
+                self.set_node_entity((i, 10), WALL)
+            # Middle walls
+            for i in range(0, 3):
+                self.set_node_entity((11, i), WALL)
+                self.set_node_entity((12, i), WALL)
+                self.set_node_entity((11, i + 5), WALL)
+                self.set_node_entity((12, i + 5), WALL)
+                self.set_node_entity((11, i + 10), WALL)
+                self.set_node_entity((12, i + 10), WALL)
+                self.set_node_entity((11, i + 15), WALL)
+                self.set_node_entity((12, i + 15), WALL)
 
     def draw_player(self, player):
         """

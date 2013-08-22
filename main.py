@@ -118,21 +118,13 @@ def main():
     # Testing Kirigiri's location
     #kirigiri.coordinates = (7,5)
     #kirigiri.direction = 'up'
-    grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
     # Testing traps
     #grid.set_node_entity((12,5), TRAP)
     #grid.set_node_entity((8,7), TRAP)
     #grid.set_node_entity((9,4), TRAP)
-    # Testing walls
-    #for i in range(4, 8):
-    #    grid.set_node_entity((5, i), WALL)
-    #for i in range(4, 8):
-    #    grid.set_node_entity((17, i), WALL)
-    #for i in range(5,18):
-    #    grid.set_node_entity((i, 14), WALL)
 
     # Initialize the walls
-    grid.spawn_walls()
+    grid.spawn_walls('arrows')
 
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
