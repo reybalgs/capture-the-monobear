@@ -8,6 +8,7 @@
 import math, pdb
 
 from grid import *
+from sets import Set
 
 # Entities
 NONE = 0
@@ -40,6 +41,68 @@ class Pathfinder():
         print('Open list:')
         for node in self.open_list:
             print(str(node.coordinates))
+
+    def print_path(self):
+        """
+        Prints the entirety of the path list.
+        """
+        print('Path list:')
+        for node in self.path:
+            print(str(node.coordinates))
+
+    def clear_node_parents(self):
+        """
+        Resets the parents of all the nodes in the grid to none.
+        """
+        for row in self.grid.node_array:
+            for node in row:
+                node.parent = None
+
+    def remove_list_duplicates(self, list):
+        """
+        Removes duplicate entries in the given list.
+        """
+        output = []
+        for x in list:
+            if x not in output:
+                output.append(x)
+        return output
+
+    def get_direction_to_next_node_v2(self, current_node):
+        """
+        Returns the direction that the AI should turn to in order to reach the
+        next node in its path list.
+
+        Updated to use the self.path variable, rather than the closed list.
+        """
+
+        print('Current node is at ' + str(current_node.coordinates))
+        try:
+            index = self.path.index(current_node)
+        except:
+            return 1
+
+        # Get the next node from the current node in the list
+        try:
+            next_node = self.path[index + 1]
+        except:
+            return 1
+        print('Next node is at ' + str(next_node.coordinates))
+
+        # Return the direction the AI needs to point to, depending on the
+        # location of the next node
+        if(next_node.getX() > current_node.getX()):
+            print('Return right direction')
+            return 'right'
+        elif(next_node.getX() < current_node.getX()):
+            print('Return left direction')
+            return 'left'
+        elif(next_node.getY() > current_node.getY()):
+            print('Return down direction')
+            return 'down'
+        elif(next_node.getY() < current_node.getY()):
+            print('Return up direction')
+            return 'up'
 
     def get_direction_to_next_node(self, current_node):
         """
@@ -94,6 +157,17 @@ class Pathfinder():
             if entry is node:
                 return True
         # Nothing found
+        return False
+
+    def is_node_in_open_list(self, node):
+        """
+        Checks if the given node is in the open list and returns a boolean
+        value depending on the result.
+        """
+        for entry in self.closed_list:
+            if entry is node:
+                print(str(node.coordinates) + ' is in open list!')
+                return True
         return False
 
     def find_adjacent_nodes(self, node):
@@ -183,6 +257,176 @@ class Pathfinder():
         cost = MOVEMENT_COST * (len(self.closed_list) - 1)
 
         return cost + MOVEMENT_COST
+
+    def find_lowest_f_in_list(self, list, end_node):
+        """
+        Returns the node with the lowest F score in the given list.
+        """
+        best_node = list[0]
+        for node in list:
+            if((self.get_movement_cost_old(node) +
+                    self.manhattan_heuristic(node, end_node)) <
+                    self.get_movement_cost_old(best_node) +
+                    self.manhattan_heuristic(best_node, end_node)):
+                # This node is better, set it as the best node
+                best_node = node
+        return best_node
+
+    def reconstruct_path(self, end_node):
+        """
+        Reconstructs a path from the given end_node to the root of the path by
+        tracing the parents of the nodes until no further parent is found.
+        """
+        if end_node.parent:
+            # Set the boolean flag for the "do-while" loop
+            parent = True
+        else:
+            return self.path.append(end_node)
+        current_node = end_node
+        while parent:
+            # Add the current node to the path
+            self.path.append(current_node)
+            print('Adding ' + str(current_node.coordinates) + ' to path')
+            # Print the path list
+            self.print_path()
+            if current_node.parent:
+                # The current node has a parent, set the current node to that
+                # node
+                current_node = current_node.parent
+            else:
+                # The current node has no parent, we have reached the start
+                # Reverse the list first, so that the AI can traverse it
+                parent = False
+                self.path.reverse()
+                print('Path reversed! New path list:')
+                self.print_path()
+                return self.path
+        #if end_node.parent is not None:
+        #    current_node = end_node
+        #    while current_node.parent is not None:
+        #        # Add the current node to the path
+        #        self.path.append(current_node)
+        #        print('Adding ' + str(current_node.coordinates) + ' to path')
+        #        # Print the path list
+        #        self.print_path()
+        #        current_node = current_node.parent
+        #else:
+        #    self.path.append(end_node)
+        # Reverse the path list
+        #self.path.reverse()
+        #print('Path reversed! New path list:')
+        #self.print_path()
+        #return self.path
+
+    def find_path_to_monokuma_v2(self):
+        """
+        An update to the previous function of finding the path to take to get
+        to the monokuma node. Still based on the A* algorithm, however, I'm
+        closely basing this code on the pseudocode available on Wikipedia.
+        """
+        #pdb.set_trace()
+        # Clean up the lists used by the pathfinder
+        self.closed_list = []
+        self.open_list = []
+        self.path = []
+
+        # Clear the parents of the nodes
+        self.clear_node_parents()
+        print('Node parents cleared!')
+
+        # Find the first node containing monokuma.
+        # Raise an error if there are no monokumas.
+        try:
+            monokuma_node = self.grid.find_nodes_containing(MONOKUMA).pop(0)
+        except IndexError:
+            print('No monokumas found!')
+
+        # Add the starting node to the open list.
+        if not self.is_node_in_open_list(self.start_node):
+            self.open_list.append(self.start_node)
+        # Print open nodes
+        self.print_open_list()
+
+        while len(self.open_list):
+            # Keep going with the algorithm while we still have something in
+            # the open list, or until we have found the monokuma node
+            # 
+            # Get the node in the open list with the lowest F score value.
+            best_node = self.find_lowest_f_in_list(self.open_list,
+                    monokuma_node)
+            print('Best node is ' + str(best_node.coordinates) + ' with ' +
+                    'F score of ' + str(self.get_movement_cost_old(best_node) +
+                        self.manhattan_heuristic(best_node, monokuma_node)))
+            #for node in self.open_list:
+            #    if((self.get_movement_cost_old(node) +
+            #            self.manhattan_heuristic(node, monokuma_node)) <
+            #            (self.get_movement_cost_old(node) +
+            #            self.manhattan_heuristic(node, monokuma_node))):
+            #        # Since the F score is better, let's set that as the best
+            #        # node
+            #        best_node = node
+            #        print('Best node is ' + str(best_node.coordinates) + 
+            #                ' with ' + 'F score of ' +
+            #                str(self.get_movement_cost_old(best_node) +
+            #                self.manhattan_heuristic(best_node,
+            #                monokuma_node)))
+            # Let's check if the current node is the monokuma node
+            if best_node == monokuma_node:
+                print('We have found the monokuma node! It is at ' +
+                        str(best_node.coordinates))
+                return self.reconstruct_path(best_node)
+
+            # Remove the current node from the openset
+            self.open_list.remove(best_node)
+            # Add the current node to the closed set
+            if best_node not in self.closed_list:
+                self.closed_list.append(best_node)
+
+            adjacent_nodes = self.find_adjacent_nodes(best_node)
+            #print('Adjacent nodes:')
+            #for node in adjacent_nodes:
+            #    print(str(node.coordinates))
+            for neighbor_node in adjacent_nodes:
+                tentative_g = (self.get_movement_cost_old(best_node) +
+                        MOVEMENT_COST)
+                print('Tentative G: ' + str(tentative_g))
+                print('G of ' + str(best_node.coordinates) + ': ' +
+                        str(self.get_movement_cost_old(best_node)))
+                if(neighbor_node in self.closed_list and tentative_g
+                        >= self.get_movement_cost_old(neighbor_node)):
+                    # The neighbor node is already in the closed list and it
+                    # doesn't really have an attractive G cost.
+                    print('Neighbor node ' + str(neighbor_node.coordinates) + 
+                            ' not in closed list and its tentative G score ' +
+                            'of ' + str(tentative_g) + ' is greater or equal '
+                            + 'to its actual G score')
+                #if((not self.is_node_in_closed_list(neighbor_node)) and
+                #        tentative_g <
+                #        self.get_movement_cost_old(neighbor_node)):
+                else:
+                #if(neighbor_node not in self.closed_list or (tentative_g <
+                #        self.get_movement_cost_old(neighbor_node))):
+                    # Set the parent of the current neighbor node to the
+                    # current node, to trace the path later
+                    neighbor_node.parent = best_node
+                    # Add that neighbor to the open set
+                    if neighbor_node not in self.open_list:
+                        print('Neighbor node ' +
+                                str(neighbor_node.coordinates) + ' is not ' +
+                                'in open list, appending...')
+                        self.open_list.append(neighbor_node)
+                        self.print_open_list()
+                        self.print_closed_list()
+                        #pdb.set_trace()
+
+            # Set the lists so there are no duplicates
+            #self.open_list = set(self.open_list)
+            #self.closed_list = set(self.closed_list)
+
+            # Print the lists
+            self.print_open_list()
+            self.print_closed_list()
+            self.print_path()
 
     def find_path_to_monokuma(self):
         """
@@ -290,10 +534,12 @@ class Pathfinder():
         return self.closed_list
 
     def __init__(self, grid, start_node):
-        # Initialize the closed list of nodes, this is the path we will follow
+        # Initialize the closed list of nodes
         self.closed_list = []
         # Initialize the open list of nodes
         self.open_list = []
+        # Initialize the path that we will actually follow
+        self.path = []
         # Initialize the grid that the pathfinder will use
         self.grid = grid
         # Initialize the starting node that the pathfinder will use as a

@@ -131,32 +131,33 @@ def main():
     #    grid.set_node_entity((i, 14), WALL)
 
     # Initialize the walls
-    grid.spawn_walls()
+    #grid.spawn_walls()
 
     # Initialize the handler of player UI elements
     players_ui = UI_Players()
 
     # Initialize monokuma on the grid
-    grid.spawn_monokuma()
-    #grid.set_node_entity((15,5), MONOKUMA)
+    #grid.spawn_monokuma()
+    grid.set_node_entity((10,5), MONOKUMA)
 
     # Initialize traps on the grid
-    grid.spawn_traps()
+    #grid.spawn_traps()
 
     # Randomize Naegi's location
     naegi.coordinates = grid.get_random_empty_location()
     grid.set_node_entity(naegi.coordinates, NAEGI)
     # Randomize Kirigiri's location
-    kirigiri.coordinates = grid.get_random_empty_location()
+    #kirigiri.coordinates = grid.get_random_empty_location()
+    kirigiri.coordinates = (6,6)
     grid.set_node_entity(kirigiri.coordinates, KIRIGIRI)
 
     # Initialize the pathfinder for the AI
     pathfinder = Pathfinder(grid,
             grid.get_node_in_location(kirigiri.coordinates))
     # Initialize the first path of the pathfinder
-    pathfinder.find_path_to_monokuma()
+    pathfinder.find_path_to_monokuma_v2()
     # Turn the AI in the direction it's supposed to turn to
-    kirigiri.direction = pathfinder.get_direction_to_next_node(
+    kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
             grid.get_node_in_location(kirigiri.coordinates))
 
     while loop:
@@ -165,7 +166,7 @@ def main():
         #    clock.tick(15)
         #else:
         #    clock.tick(FPS + naegi.score)
-        clock.tick(60)
+        clock.tick(5)
 
         # Display frames rendered
         #frames += 1
@@ -175,6 +176,10 @@ def main():
         # Game logic
         ####################################################################
 
+        # Update the start node of the pathfinder
+        pathfinder.start_node = grid.get_node_in_location(
+                kirigiri.coordinates)
+
         # Randomize monokuma
         monokuma_frames += 1
         if(monokuma_frames > (20 * FPS) or len(grid.find_nodes_containing(MONOKUMA)) is
@@ -183,32 +188,32 @@ def main():
             # monokumas on the map
             grid.spawn_monokuma()
             monokuma_frames = 0
-            # Update the start node of the pathfinder
-            if(len(grid.find_nodes_containing(MONOKUMA))):
-                pathfinder.start_node = grid.get_node_in_location(
-                        kirigiri.coordinates)
-                # Make the pathfinder find a new path
-                pathfinder.find_path_to_monokuma()
+            print('New monokuma spawned at ' +
+                    str(grid.find_nodes_containing(MONOKUMA)[0].coordinates))
+            #pdb.set_trace()
+            # Make the pathfinder find a new path
+            pathfinder.find_path_to_monokuma_v2()
 
         # Randomize traps
-        trap_frames += 1
-        if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
-                0):
-            # Spawn traps when x frames have passed or there are no traps on
-            # the map
-            grid.spawn_traps()
-            trap_frames = 0
-            # Update the start node of the pathfinder
-            if(len(grid.find_nodes_containing(MONOKUMA))):
-                pathfinder.start_node = grid.get_node_in_location(
-                        kirigiri.coordinates)
-                # Make the pathfinder find a new path
-                pathfinder.find_path_to_monokuma()
+        #trap_frames += 1
+        #if(trap_frames > (15 * FPS) or len(grid.find_nodes_containing(TRAP)) is
+        #        0):
+        #    # Spawn traps when x frames have passed or there are no traps on
+        #    # the map
+        #    grid.spawn_traps()
+        #    trap_frames = 0
+        #    # Update the start node of the pathfinder
+        #    if(len(grid.find_nodes_containing(MONOKUMA))):
+        #        pathfinder.start_node = grid.get_node_in_location(
+        #                kirigiri.coordinates)
+        #        # Make the pathfinder find a new path
+        #        pathfinder.find_path_to_monokuma_v2()
 
         # Turn the AI in the direction it's supposed to turn to
-        if(len(pathfinder.closed_list)):
-            kirigiri.direction = pathfinder.get_direction_to_next_node(
+        #if(len(pathfinder.path)):
+        kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
                 grid.get_node_in_location(kirigiri.coordinates))
+        print('Kirigiri direction is ' + kirigiri.direction)
 
         # Move the two players in forwards in the direction they are facing
         # However, if they are currently trapped, do not move them.

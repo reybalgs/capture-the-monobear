@@ -262,6 +262,21 @@ class Grid():
             for i in range(5, 11):
                 self.set_node_entity((3, i), WALL)
                 self.set_node_entity((19, i), WALL)
+        elif pattern is 'bottleneck':
+            # Create a bottle where there is only one path in and out
+            # Necks
+            for i in range(8, 14):
+                self.set_node_entity((10, i), WALL)
+                self.set_node_entity((12, i), WALL)
+            # Bottle top horizontal
+            for i in range(6, 11):
+                self.set_node_entity((i, 14), WALL)
+            for i in range(12, 17):
+                self.set_node_entity((i, 14), WALL)
+            # Bottle verticals
+            for i in range(15, 18):
+                self.set_node_entity((6, i), WALL)
+                self.set_node_entity((16, i), WALL)
 
     def draw_player(self, player):
         """
@@ -270,6 +285,9 @@ class Grid():
         dependent on the direction of the player passed.
         """
         screen = pygame.display.get_surface()
+
+        print('Coordinates are ' + str(player.coordinates))
+        print('Direction is ' + str(player.direction))
 
         # Get the rect where the triangle is going to be drawn.
         square_rect = pygame.Rect(self.get_drawing_coordinates(

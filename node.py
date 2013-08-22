@@ -38,11 +38,13 @@ class Node():
         """
         return self.coordinates
 
-    def __init__(self, coord_x = 0, coord_y = 0, contents = 0):
+    def __init__(self, coord_x = 0, coord_y = 0, contents = 0, parent=None):
         # The contents of the node.
         self.contents = contents
         # The coordinates of the node.
         self.coordinates = (coord_x, coord_y)
+        # The parent of the node.
+        self.parent = parent
 
 def main():
     # Main function for testing
