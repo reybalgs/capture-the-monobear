@@ -202,10 +202,10 @@ def main():
                 # Make the pathfinder find a new path
                 pathfinder.find_path_to_monokuma_v2()
         # Turn the AI in the direction it's supposed to turn to
-        #if(len(pathfinder.path)):
-        kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
+        if(len(pathfinder.path)):
+            kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
                 grid.get_node_in_location(kirigiri.coordinates))
-        print('Kirigiri direction is ' + kirigiri.direction)
+        #print('Kirigiri direction is ' + kirigiri.direction)
 
         # Move the two players in forwards in the direction they are facing
         # However, if they are currently trapped, do not move them.
