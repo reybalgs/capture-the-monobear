@@ -176,6 +176,10 @@ class Grid():
                 # Set the flag that the player has scored, this will help with
                 # the graphics
                 player.scored = True
+                # Play a score sound
+                score_sound = pygame.mixer.Sound(os.path.join("sounds",
+                    "score.ogg"))
+                score_sound.play()
             # Now let's check if the player stepped on a trap
             elif(node.contents is TRAP):
                 # Decrement the score of the player by two, but don't let it go
