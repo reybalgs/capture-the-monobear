@@ -147,6 +147,11 @@ def main():
     # Initialize traps on the grid
     grid.spawn_traps()
 
+    # Play some music
+    pygame.mixer.music.load(os.path.join("sounds", "heatup.ogg"))
+    pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(0.25)
+
     # Randomize Naegi's location
     naegi.coordinates = grid.get_random_empty_location()
     grid.set_node_entity(naegi.coordinates, NAEGI)
@@ -166,8 +171,8 @@ def main():
 
     while not (kirigiri_won or naegi_won):
         # Limit the frame rate of the game
-        if((FPS + naegi.score) > 15):
-            clock.tick(15)
+        if((FPS + naegi.score) > 8):
+            clock.tick(8)
         else:
             clock.tick(FPS + naegi.score)
 
@@ -207,10 +212,12 @@ def main():
             trap_frames = 0
             # Update the start node of the pathfinder
             if(len(grid.find_nodes_containing(MONOKUMA))):
-                pathfinder.start_node = grid.get_node_in_location(
-                        kirigiri.coordinates)
-                # Make the pathfinder find a new path
-                pathfinder.find_path_to_monokuma_v2()
+                if((random.randint(0,100)) >= 90):
+                    # 10% chance for the AI to avoid traps
+                    pathfinder.start_node = grid.get_node_in_location(
+                            kirigiri.coordinates)
+                    # Make the pathfinder find a new path
+                    pathfinder.find_path_to_monokuma_v2()
         # Turn the AI in the direction it's supposed to turn to
         if(len(pathfinder.path)):
             kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
@@ -228,6 +235,7 @@ def main():
         # Scoring
         if(naegi.scored):
             naegi_score_frames += 1
+
         elif(kirigiri.scored):
             kirigiri_score_frames += 1
         # Trapping
@@ -250,7 +258,7 @@ def main():
             naegi_trap_frames = 0
         if(kirigiri_trap_frames >= PLAYER_TRAP_FRAMES):
             kirigiri.trapped = False
-            kirigiri_score_frames = 0
+            kirigiri_trap_frames = 0
 
         # Set the won flags whenever one of them has won or not
         if(naegi.score >= WINNING_SCORE):
