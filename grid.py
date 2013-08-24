@@ -3,7 +3,7 @@
 # Python source file containing the code for the logic of the grid, as well as
 # drawing the grid.
 
-import random, os, sys, pygame
+import random, os, sys, pygame, pdb
 from pygame.locals import *
 
 # Import node class
@@ -187,6 +187,10 @@ class Grid():
                 # Set the flag that the player has been trapped, this will help
                 # with the graphics (and the movement)
                 player.trapped = True
+                # Play an explosion sound
+                explosion_sound = pygame.mixer.Sound(os.path.join("sounds",
+                    "explosion.wav"))
+                explosion_sound.play()
             # We can move through
             # Set the coordinates of the player to the new location
             player.coordinates = new_location
@@ -501,6 +505,29 @@ class Grid():
             drawing_loc = self.get_drawing_coordinates(node.coordinates)
             # Blit Monokuma in that location
             screen.blit(monokuma, drawing_loc)
+
+    def draw_explosions(self, location, frame):
+        """
+        Draws an expanding explosion sprite in the given location on the map.
+        The size depends on the current frame of the explosion.
+        """
+        screen = pygame.display.get_surface()
+        # Get the rect pertaining to the location
+        drawing_rect = pygame.Rect((self.get_drawing_coordinates(location)),
+                (SQUARE_SIZE, SQUARE_SIZE))
+        # Load the explosion image
+        explosion = pygame.image.load(os.path.join(
+            "images", "pow.png"))
+        # Scale the image according to the current frame
+        # Debug message
+        print('Frame multiplier is ' + str(frame / 10.0))
+        explosion = pygame.transform.scale(explosion,
+                (int(explosion.get_rect().width * (frame / 10.0)),
+                int(explosion.get_rect().height * (frame / 10.0))))
+        # Set the drawing location to the middle of the rect
+        #drawing_rect.topleft = (drawing_rect.centerx, drawing_rect.centery)
+        # Blit the explosion
+        screen.blit(explosion, drawing_rect)
 
     def draw_grid(self):
         """

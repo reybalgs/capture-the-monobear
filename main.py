@@ -25,7 +25,7 @@ SCREEN_Y = 600
 FPS = 2
 
 # Node size
-NODE_SIZE = 24
+NODE_SIZE = 32
 
 # Entities
 NONE = 0
@@ -55,15 +55,25 @@ PLAYER_TRAP_FRAMES = 10
 # How long (frames) explosions occur
 EXPLOSION_FRAMES = 4
 
+# The score required to win
+WINNING_SCORE = 30
+
 # Global variables for movement
 dpad_up_pressed = False
 dpad_down_pressed = False
 dpad_right_pressed = False
 dpad_left_pressed = False
 
+# Global images used
+# The tiling background image we will use for the game
+tile_img = pygame.image.load(os.path.join(".", "images", "bg.png"))
+
 def main():
     # Main function
     clock = pygame.time.Clock()
+
+    # Initialize the mixer
+    pygame.mixer.init()
 
     # Get the screen of the game
     window = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
@@ -73,8 +83,9 @@ def main():
     # Initialize the background of the game
     background = pygame.Surface(screen.get_size())
 
-    # Unnecessary game loop variable
-    loop = True
+    # Loop the game as long as nobody has won
+    naegi_won = 0
+    kirigiri_won = 0
 
     # Tracks total frames rendered
     frames = 0
@@ -153,13 +164,12 @@ def main():
     kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
             grid.get_node_in_location(kirigiri.coordinates))
 
-    while loop:
+    while not (kirigiri_won or naegi_won):
         # Limit the frame rate of the game
-        #if((FPS + naegi.score) > 15):
-        #    clock.tick(15)
-        #else:
-        #    clock.tick(FPS + naegi.score)
-        clock.tick(8)
+        if((FPS + naegi.score) > 15):
+            clock.tick(15)
+        else:
+            clock.tick(FPS + naegi.score)
 
         # Display frames rendered
         #frames += 1
@@ -242,6 +252,12 @@ def main():
             kirigiri.trapped = False
             kirigiri_score_frames = 0
 
+        # Set the won flags whenever one of them has won or not
+        if(naegi.score >= WINNING_SCORE):
+            naegi_won = True
+        if(kirigiri.score >= WINNING_SCORE):
+            kirigiri_won = True
+
         ####################################################################
         # Event Handling
         ####################################################################
@@ -274,13 +290,33 @@ def main():
         # Display updating
         ####################################################################
 
-        # Clear the screen for new blits
+        # Clear the screen with white
         screen.fill(WHITE)
 
+        # Render the tile bg
+        bg_img_rect = tile_img.get_rect()
+        nrows = int(screen.get_height() / bg_img_rect.height) + 1
+        ncols = int(screen.get_width() / bg_img_rect.width) + 1
+
+        for y in range(nrows):
+            for x in range(ncols):
+                bg_img_rect.topleft = (x * bg_img_rect.width, y *
+                        bg_img_rect.height)
+                screen.blit(tile_img, bg_img_rect)
+
+        # Fill the game area with white
+        game_rect = ((16, 12), (32 * 24, 32 * 18))
+        pygame.draw.rect(screen, WHITE, game_rect)
+
+        # Fill the player area with white
+        player_area_rect = ((16 + (32 * 24), 12), (232, 576))
+        pygame.draw.rect(screen, WHITE, player_area_rect)
+
         # Draw the grid and its elements
-        grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
-        grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
-        grid.highlight_path(pathfinder.path, PATH_LIST_COLOR)
+        # Highlight the pathfinding of the AI
+        #grid.highlight_path(pathfinder.open_list, OPEN_LIST_COLOR)
+        #grid.highlight_path(pathfinder.closed_list, CLOSED_LIST_COLOR)
+        #grid.highlight_path(pathfinder.path, PATH_LIST_COLOR)
         grid.draw_grid()
         grid.draw_monokuma()
         grid.draw_walls()
@@ -302,6 +338,8 @@ def main():
         # Naegi trapped
         elif(naegi_trap_frames > 0 and naegi_trap_frames < PLAYER_TRAP_FRAMES):
             players_ui.draw_image(False, False, True)
+            # Draw the explosion sprite
+            #grid.draw_explosions(naegi.coordinates, naegi_trap_frames)
         # Kirigiri trapped
         elif(kirigiri_trap_frames > 0 and kirigiri_trap_frames <
                 PLAYER_TRAP_FRAMES):
@@ -311,6 +349,14 @@ def main():
 
         # Update everything
         pygame.display.flip()
+
+    # Clear the screen
+    screen.fill(WHITE)
+    # Check the winner
+    if(kirigiri_won):
+        print('Kirigiri won!')
+    else:
+        print('Naegi won!')
 
 if __name__ == '__main__':
     main()
