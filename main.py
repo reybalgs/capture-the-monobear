@@ -41,6 +41,7 @@ Y = 1
 
 # Colors
 WHITE = (255,255,255)
+BLACK = (0,0,0)
 OPEN_LIST_COLOR = pygame.Color(0,200,0,150)
 CLOSED_LIST_COLOR = pygame.Color(200,0,0,150)
 PATH_LIST_COLOR = pygame.Color(200,200,0,150)
@@ -148,7 +149,7 @@ def main():
     grid.spawn_traps()
 
     # Play some music
-    pygame.mixer.music.load(os.path.join("sounds", "heatup.ogg"))
+    pygame.mixer.music.load(os.path.join("sounds", "slow.ogg"))
     pygame.mixer.music.play()
     pygame.mixer.music.set_volume(0.25)
 
@@ -169,12 +170,14 @@ def main():
     kirigiri.direction = pathfinder.get_direction_to_next_node_v2(
             grid.get_node_in_location(kirigiri.coordinates))
 
+
+    # Main game
     while not (kirigiri_won or naegi_won):
         # Limit the frame rate of the game
-        if((FPS + naegi.score) > 8):
-            clock.tick(8)
+        if((FPS + (naegi.score / 8.0)) > 8):
+            clock.tick(6)
         else:
-            clock.tick(FPS + naegi.score)
+           clock.tick(FPS + (naegi.score / 8.0))
 
         # Display frames rendered
         #frames += 1

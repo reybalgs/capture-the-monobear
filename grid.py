@@ -171,17 +171,32 @@ class Grid():
         else:
             # Let's check if we grabbed Monokuma
             if(node.contents is MONOKUMA):
+                # Get the previous score of the player
+                previous_score = player.score
                 # Increment the score of the player
                 player.score += 1
                 # Set the flag that the player has scored, this will help with
                 # the graphics
                 player.scored = True
+                # Change the music appropriately
+                if previous_score < 10 and player.score >= 10:
+                    pygame.mixer.music.load(os.path.join("sounds",
+                        "medium.ogg"))
+                    pygame.mixer.music.play()
+                elif previous_score < 20 and player.score >= 20:
+                    pygame.mixer.music.load(os.path.join("sounds", "fast.ogg"))
+                    pygame.mixer.music.play()
+                elif previous_score >= 10 and player.score < 10:
+                    pygame.mixer.music.load(os.path.join("sounds", "slow.ogg"))
+                    pygame.mixer.music.play()
                 # Play a score sound
                 score_sound = pygame.mixer.Sound(os.path.join("sounds",
                     "score.ogg"))
                 score_sound.play()
             # Now let's check if the player stepped on a trap
             elif(node.contents is TRAP):
+                # Get the previous score of the player
+                previous_score = player.score
                 # Decrement the score of the player by two, but don't let it go
                 # to negative
                 if(player.score < 2):
@@ -191,6 +206,17 @@ class Grid():
                 # Set the flag that the player has been trapped, this will help
                 # with the graphics (and the movement)
                 player.trapped = True
+                # Change the music appropriately
+                if previous_score < 10 and player.score >= 10:
+                    pygame.mixer.music.load(os.path.join("sounds",
+                        "medium.ogg"))
+                    pygame.mixer.music.play()
+                elif previous_score < 20 and player.score >= 20:
+                    pygame.mixer.music.load(os.path.join("sounds", "fast.ogg"))
+                    pygame.mixer.music.play()
+                elif previous_score >= 10 and player.score < 10:
+                    pygame.mixer.music.load(os.path.join("sounds", "slow.ogg"))
+                    pygame.mixer.music.play()
                 # Play an explosion sound
                 explosion_sound = pygame.mixer.Sound(os.path.join("sounds",
                     "explosion.wav"))
