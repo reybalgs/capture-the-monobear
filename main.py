@@ -364,10 +364,18 @@ def main():
     # Clear the screen
     screen.fill(WHITE)
     # Check the winner
+    pygame.mixer.music.stop()
+    # Play winning sound
+    win_sound = pygame.mixer.Sound(os.path.join("sounds", "fanfare.ogg"))
+    win_sound.play()
     if(kirigiri_won):
         print('Kirigiri won!')
+        players_ui.draw_win_text('kirigiri')
     else:
+        players_ui.draw_win_text('naegi')
         print('Naegi won!')
+    pygame.display.flip()
+    pygame.time.wait(15000)
 
 if __name__ == '__main__':
     main()

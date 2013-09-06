@@ -8,6 +8,9 @@ from pygame.locals import *
 pygame.font.init()
 
 # CONSTANTS
+# Screen resolution
+SCREEN_X = 1024
+SCREEN_Y = 600
 # Color for Naegi's text and icon
 NAEGI_COLOR = (120,150,90)
 # Color for Kirigiri's text and icon
@@ -15,6 +18,7 @@ KIRIGIRI_COLOR = (200,160,200)
 
 # The font for the player text.
 text_font = pygame.font.Font(os.path.join(".", "orange_juice.ttf"), 48)
+winner_font = pygame.font.Font(os.path.join(".", "orange_juice.ttf"), 140)
 
 class UI_Players():
     def draw_score(self, naegi_score = 0, kirigiri_score = 0):
@@ -52,6 +56,20 @@ class UI_Players():
         # Blit the two image
         screen.blit(naegi_text, (792,24))
         screen.blit(kirigiri_text, (792,308))
+
+    def draw_win_text(self, winner):
+        """
+        Draws winning text on the center of the screen, depending on who the
+        winner is.
+        """
+        screen = pygame.display.get_surface()
+
+        if winner is 'naegi':
+            text = winner_font.render("Naegi won!", 1, NAEGI_COLOR)
+        else:
+            text = winner_font.render("Kirigiri won!", 1, KIRIGIRI_COLOR)
+        screen.blit(text, ((SCREEN_X / 2) - (text.get_rect().width / 2),
+            (SCREEN_Y / 2) - (text.get_rect().height / 2)))
 
     def draw_image(self, naegi_scored=False, kirigiri_scored=False,
             naegi_trapped=False, kirigiri_trapped=False):
